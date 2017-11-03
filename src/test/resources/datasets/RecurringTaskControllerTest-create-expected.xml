@@ -1,0 +1,7 @@
+<dataset>
+    <recurring_task
+            name="Dusting"
+            min_number_of_days_between_executions="3"
+            max_number_of_days_between_executions="7"
+    />
+</dataset>

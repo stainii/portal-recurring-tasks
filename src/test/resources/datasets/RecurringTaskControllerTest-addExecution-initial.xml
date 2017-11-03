@@ -1,0 +1,25 @@
+<dataset>
+    <recurring_task
+            id="1"
+            name="Dusting"
+            min_number_of_days_between_executions="3"
+            max_number_of_days_between_executions="7"
+    />
+    <recurring_task
+            id="2"
+            name="Watering the plants"
+            min_number_of_days_between_executions="3"
+            max_number_of_days_between_executions="4"
+    />
+
+    <execution
+            id="1"
+            date="2017-10-20 10:02:10"
+            executor="Stijn"
+            recurring_task_id="2" />
+    <execution
+            id="2"
+            date="2017-10-23 19:05:00"
+            executor="Tim"
+            recurring_task_id="2" />
+</dataset>

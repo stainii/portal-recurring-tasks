@@ -1,0 +1,14 @@
+$main-colour: #F25D5F;
+$background-colour: #e5e7e8;
+$dark-background: #192224;
+$highlight-colour: #18a89a;
+
+.housagotchi-component {
+  display: flex;
+}
+
+@media all and (max-width: 640px) {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}

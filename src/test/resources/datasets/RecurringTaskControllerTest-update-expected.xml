@@ -1,0 +1,8 @@
+<dataset>
+    <recurring_task
+            id="1"
+            name="Dusting the bedroom"
+            min_number_of_days_between_executions="3"
+            max_number_of_days_between_executions="5"
+    />
+</dataset>
