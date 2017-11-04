@@ -24,7 +24,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- default parameters used in the application. Override these with a Maven profile -->
-        <context.path>/portal/housagotchi</context.path>
+        <context.path>/portal/module/housagotchi</context.path>
         <environment>dev</environment>
 
         <!-- versions of dependencies -->
