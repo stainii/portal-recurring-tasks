@@ -14,3 +14,5 @@ class Housagotchi extends React.Component {
 }
 
 window.Housagotchi = Housagotchi;
+
+export default Housagotchi;

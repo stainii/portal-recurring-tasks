@@ -2,16 +2,9 @@
 
 .housagotchi-component .add-execution {
 
-  display: flex;
-  flex-grow: 1;
-  min-width: 320px;
+  display: block;
+  width: 100%;
   background: $dark-background;
   color: $background-colour;
-
-  @media all and (max-width: 640px) {
-    display: block;
-    width: 100%;
-    min-width: 0;
-  }
 
 }

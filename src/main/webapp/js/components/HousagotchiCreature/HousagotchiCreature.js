@@ -1,4 +1,5 @@
 import React from "react";
+import HousagotchiBalloon from "../HousagotchiBalloon/HousagotchiBalloon";
 
 class HousagotchiCreature extends React.Component {
 
@@ -10,6 +11,7 @@ class HousagotchiCreature extends React.Component {
         return (
             <div className="housagotchi-creature">
                 <img src={"/portal/module/housagotchi/static/imgs/creature/" + this.state.mood + ".png"} />
+                <HousagotchiBalloon text="Hey! Nothing to do!! I'm happy!!!"/>
             </div>
         );
     }
