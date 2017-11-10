@@ -5,6 +5,64 @@ $highlight-colour: #18a89a;
 
 .housagotchi-component {
   display: block;
+  background: $background-colour;
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  .tabs {
+    display: block;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .react-tabs {
+    &__tab-list {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      margin: 0 0 30px;
+      padding: 0;
+    }
+
+    &__tab {
+      display: inline-block;
+      border: 1px solid transparent;
+      border-bottom: none;
+      bottom: -1px;
+      position: relative;
+      list-style: none;
+      padding: 6px 12px;
+      cursor: pointer;
+
+      &--selected {
+        border-top: 2px solid $highlight-colour;
+      }
+      &:focus {
+        outline: none;
+
+        &:after {
+          content: "";
+          position: absolute;
+          height: 5px;
+          left: -4px;
+          right: -4px;
+          bottom: -5px;
+        }
+      }
+    }
+
+    &__tab-panel {
+      display: none;
+
+      &--selected {
+        display: block;
+      }
+
+      &--disabled {
+        color: GrayText;
+        cursor: default;
+      }
+    }
+  }
 }
 
 @media all and (max-width: 640px) {
@@ -12,3 +70,4 @@ $highlight-colour: #18a89a;
   width: 100%;
   min-width: 0;
 }
+
