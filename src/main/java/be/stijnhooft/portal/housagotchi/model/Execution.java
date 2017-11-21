@@ -28,16 +28,10 @@ public class Execution {
     @NonNull
     private LocalDateTime date;
 
-    /** The name of the person who has executed the recurring task **/
-    @Getter
-    @NonNull
-    private String executor;
-
     public Execution() {
     }
 
-    public Execution(LocalDateTime date, String executor) {
+    public Execution(LocalDateTime date) {
         this.date = date;
-        this.executor = executor;
     }
 }

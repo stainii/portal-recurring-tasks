@@ -14,17 +14,14 @@
 
     <execution
             date="2017-10-20 10:02:10"
-            executor="Stijn"
             recurring_task_id="2"
     />
     <execution
             date="2017-10-23 19:05:00"
-            executor="Tim"
             recurring_task_id="2"
     />
     <execution
             date="2017-10-23 21:30:00"
-            executor="Lien"
             recurring_task_id="1"
     />
 </dataset>

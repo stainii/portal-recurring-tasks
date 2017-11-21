@@ -13,9 +13,4 @@ public class ExecutionDTO {
     @NonNull
     private LocalDateTime date;
 
-    /** The name of the person who has executed the recurring task **/
-    @Getter
-    @NonNull
-    private String executor;
-
 }

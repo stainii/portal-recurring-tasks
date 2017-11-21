@@ -26,12 +26,10 @@ public class ExecutionMapperTest {
     @Test
     public void map() {
         LocalDateTime date = LocalDateTime.now();
-        String executor = "Stijn";
-        ExecutionDTO executionDTO = new ExecutionDTO(date, executor);
+        ExecutionDTO executionDTO = new ExecutionDTO(date);
 
         Execution execution = mapper.map(executionDTO);
 
         assertEquals(date, execution.getDate());
-        assertEquals(executor, execution.getExecutor());
     }
 }

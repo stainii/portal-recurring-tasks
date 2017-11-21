@@ -1,6 +1,7 @@
 import React from "react";
 import HousagotchiCreature from "./components/HousagotchiCreature/HousagotchiCreature";
-import AddExecution from "./components/AddExecution/AddExecution";
+import HousagotchiAddExecution from "./components/HousagotchiAddExecution/HousagotchiAddExecution";
+import HousagotchiManageRecurringTasks from "./components/HousagotchiManageRecurringTasks/HousagotchiManageRecurringTasks";
 import {Tab, TabList, TabPanel, Tabs} from 'react-tabs';
 
 class Housagotchi extends React.Component {
@@ -14,10 +15,10 @@ class Housagotchi extends React.Component {
                         <Tab>Manage tasks</Tab>
                     </TabList>
                     <TabPanel>
-                        <AddExecution/>
+                        <HousagotchiAddExecution/>
                     </TabPanel>
                     <TabPanel>
-                        <h2>Manage tasks: todo</h2>
+                        <HousagotchiManageRecurringTasks/>
                     </TabPanel>
                 </Tabs>
             </div>

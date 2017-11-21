@@ -2,7 +2,7 @@ import React from "react";
 
 import moment from "moment";
 
-class AddExecution extends React.Component {
+class HousagotchiAddExecution extends React.Component {
 
     constructor(props) {
         super(props);
@@ -56,4 +56,4 @@ class AddExecution extends React.Component {
     };
 }
 
-export default AddExecution;
+export default HousagotchiAddExecution;

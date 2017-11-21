@@ -134,13 +134,13 @@ public class RecurringTaskControllerIntTest {
             assertionMode = DatabaseAssertionMode.NON_STRICT)
     @DatabaseTearDown("/datasets/clear.xml")
     public void addExecutionWhenSuccess() throws Exception {
-        controller.addExecution(new ExecutionDTO(LocalDateTime.of(2017, Month.OCTOBER, 23, 21, 30), "Lien"), 1);
+        controller.addExecution(new ExecutionDTO(LocalDateTime.of(2017, Month.OCTOBER, 23, 21, 30)), 1);
     }
 
     @Test(expected = IllegalArgumentException.class)
     @DatabaseSetup("/datasets/RecurringTaskControllerTest-addExecution-initial.xml")
     @DatabaseTearDown("/datasets/clear.xml")
     public void addExecutionWhenRecurrentTaskDoesNotExist() throws Exception {
-        controller.addExecution(new ExecutionDTO(LocalDateTime.now(), "Lien"), 100);
+        controller.addExecution(new ExecutionDTO(LocalDateTime.now()), 100);
     }
 }

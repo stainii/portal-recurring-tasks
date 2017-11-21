@@ -1,7 +1,6 @@
 var gulp = require("gulp");
 var browserify = require("browserify");
 var source = require('vinyl-source-stream');
-var babelify = require("babelify");
 var sass = require("gulp-sass");
 var concat = require("gulp-concat");
 var connect = require("gulp-connect");
@@ -54,22 +53,14 @@ gulp.task("html", function() {
 
 gulp.task("js-for-export", function() {
     browserify(config.paths.mainJS)
-        .transform("babelify", {
-            presets: ["es2015", "react"]
-        })
         .bundle()
-        .on("error", console.error.bind(console))
         .pipe(source("bundle.js"))
         .pipe(gulp.dest(config.paths.dist))
 });
 
 gulp.task("js-for-lite-server", function() {
     browserify(config.paths.bootstrapJS)
-        .transform("babelify", {
-            presets: ["es2015", "react"]
-        })
         .bundle()
-        .on("error", console.error.bind(console))
         .pipe(source("bundle.js"))
         .pipe(gulp.dest(config.paths.dist))
 });

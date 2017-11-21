@@ -11,8 +11,7 @@ public class ExecutionMapper extends Mapper<ExecutionDTO, Execution> {
     @Override
     public Execution map(@NonNull ExecutionDTO executionDTO) {
         return new Execution(
-                executionDTO.getDate(),
-                executionDTO.getExecutor()
+                executionDTO.getDate()
         );
     }
 

@@ -41,9 +41,9 @@ public class RecurringTaskDTOMapperTest {
             }
         }.setId(10);
 
-        recurringTask.addExecution(new Execution(LocalDateTime.of(2017, Month.OCTOBER, 23, 10, 12), "Stijn"));
-        recurringTask.addExecution(new Execution(LocalDateTime.of(2017, Month.OCTOBER, 23, 15, 3), "Stijn"));
-        recurringTask.addExecution(new Execution(LocalDateTime.of(2017, Month.OCTOBER, 10, 15, 3), "Stijn"));
+        recurringTask.addExecution(new Execution(LocalDateTime.of(2017, Month.OCTOBER, 23, 10, 12)));
+        recurringTask.addExecution(new Execution(LocalDateTime.of(2017, Month.OCTOBER, 23, 15, 3)));
+        recurringTask.addExecution(new Execution(LocalDateTime.of(2017, Month.OCTOBER, 10, 15, 3)));
 
         RecurringTaskDTO recurringTaskDTO = mapper.map(recurringTask);
 

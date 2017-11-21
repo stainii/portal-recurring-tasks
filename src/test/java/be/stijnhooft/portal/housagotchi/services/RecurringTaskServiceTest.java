@@ -130,7 +130,7 @@ public class RecurringTaskServiceTest {
     @Test
     public void addExecution() {
         //data set
-        ExecutionDTO executionDTO = new ExecutionDTO(LocalDateTime.now(), "Tim");
+        ExecutionDTO executionDTO = new ExecutionDTO(LocalDateTime.now());
         Execution execution = new Execution();
         RecurringTask recurringTask = new RecurringTask();
         RecurringTaskDTO recurringTaskDTO = new RecurringTaskDTO(10L, "test", 1, 2, null);
