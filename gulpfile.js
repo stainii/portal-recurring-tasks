@@ -6,33 +6,36 @@ var concat = require("gulp-concat");
 var connect = require("gulp-connect");
 var open = require("gulp-open");
 var Proxy = require('gulp-api-proxy');
+var clean = require("gulp-clean");
 
 var config = {
-    port: 3000,
+    port: 3001,
     devBaseUrl: "http://localhost",
     paths: {
-        html: "./src/main/webapp/*.html",
-        js: "./src/main/webapp/js/**/*.js",
-        sass: "./src/main/webapp/**/*.scss",
-        mainJS: "./src/main/webapp/js/app.js",
-        bootstrapJS: "./src/main/webapp/js/bootstrap.js",
-        static: "./src/main/webapp/static/**/*",
-        webInf: "./src/main/webapp/WEB-INF/**/*",
-        dist: "./src/main/webapp/dist/"
+        html: "./src/main/react/*.html",
+        js: "./src/main/react/js/**/*.js",
+        sass: "./src/main/react/**/*.scss",
+        mainJS: "./src/main/react/js/app.js",
+        static: "./src/main/react/static/**/*",
+        dist: "./src/main/public/"
     }
 
 };
 
+gulp.task("clean", function() {
+    return gulp.src(config.paths.dist, {read: false})
+        .pipe(clean());
+});
 
-gulp.task("connect", function () {
+gulp.task("connect", ["html", "js", "sass", "static"], function () {
     connect.server({
         root: [config.paths.dist],
         port: config.port,
         base: config.devBaseUrl,
         livereload: true,
         middleware: function (connect, opt) {
-            opt.route = '/portal/module/housagotchi';
-            opt.context = 'localhost:8080/portal/module/housagotchi';
+            opt.route = '/api';
+            opt.context = 'localhost:2002/api';
             return [new Proxy(opt)];
         }
     })
@@ -42,46 +45,32 @@ gulp.task("open", ["connect"], function() {
     gulp.src(config.paths.dist + "index.html")
         .pipe(open({
             uri: config.devBaseUrl + ":" + config.port + "/",
-
         }));
 });
 
-gulp.task("html", function() {
+gulp.task("html", ["clean"], function() {
     gulp.src(config.paths.html)
         .pipe(gulp.dest(config.paths.dist));
 });
 
-gulp.task("js-for-export", function() {
+gulp.task("js", ["clean"], function() {
     browserify(config.paths.mainJS)
         .bundle()
         .pipe(source("bundle.js"))
         .pipe(gulp.dest(config.paths.dist))
 });
 
-gulp.task("js-for-lite-server", function() {
-    browserify(config.paths.bootstrapJS)
-        .bundle()
-        .pipe(source("bundle.js"))
-        .pipe(gulp.dest(config.paths.dist))
-});
-
-gulp.task("web-inf", function() {
-    gulp.src(config.paths.webInf)
-        .pipe(gulp.dest(config.paths.dist + "/WEB-INF/"));
-});
-
-
-gulp.task("static", function() {
+gulp.task("static", ["clean"], function() {
     gulp.src(config.paths.static)
         .pipe(gulp.dest(config.paths.dist + "/static/"));
 });
 
-gulp.task('sass', function () {
+gulp.task('sass', ["clean"], function () {
     return gulp.src(config.paths.sass)
         .pipe(sass())
         .pipe(concat("bundle.css"))
         .pipe(gulp.dest(config.paths.dist));
 });
 
-gulp.task("default", [ "js-for-export", "sass", "web-inf", "static" ]);
-gulp.task("lite", [ "html", "js-for-lite-server", "sass", "web-inf", "static", "connect", "open" ]);
+gulp.task("default", [ "clean", "html", "js", "sass", "static" ]);
+gulp.task("lite", [ "clean", "html", "js", "sass", "static", "connect", "open" ]);

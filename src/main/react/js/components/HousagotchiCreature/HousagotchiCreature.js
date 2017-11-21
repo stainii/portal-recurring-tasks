@@ -10,7 +10,7 @@ class HousagotchiCreature extends React.Component {
     render() {
         return (
             <div className="housagotchi-creature">
-                <img src={"/portal/module/housagotchi/static/imgs/creature/" + this.state.mood + ".png"} />
+                <img src={"/static/imgs/creature/" + this.state.mood + ".png"} />
                 <HousagotchiBalloon text="Hey! Nothing to do!! I'm happy!!!"/>
             </div>
         );

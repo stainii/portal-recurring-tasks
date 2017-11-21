@@ -1,13 +1,9 @@
-$main-colour: #F25D5F;
-$background-colour: #e5e7e8;
-$dark-background: #192224;
-$highlight-colour: #18a89a;
+@import "node_modules/stijnhooft-portal-front-end-library/style/app";
 
 .housagotchi-component {
   display: block;
   background: $background-colour;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  padding: $default-amount-of-whitespace;
 
   .tabs {
     display: block;
@@ -70,4 +66,3 @@ $highlight-colour: #18a89a;
   width: 100%;
   min-width: 0;
 }
-

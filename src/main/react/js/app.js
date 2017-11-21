@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import HousagotchiCreature from "./components/HousagotchiCreature/HousagotchiCreature";
 import HousagotchiAddExecution from "./components/HousagotchiAddExecution/HousagotchiAddExecution";
 import HousagotchiManageRecurringTasks from "./components/HousagotchiManageRecurringTasks/HousagotchiManageRecurringTasks";
@@ -26,6 +27,10 @@ class Housagotchi extends React.Component {
     }
 }
 
-window.Housagotchi = Housagotchi;
 
-export default Housagotchi;
+(function() {
+    ReactDOM.render(
+        <Housagotchi />,
+        document.getElementById("main")
+    );
+})();

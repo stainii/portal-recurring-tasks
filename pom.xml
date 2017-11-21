@@ -6,7 +6,7 @@
     <groupId>be.stijnhooft</groupId>
     <artifactId>portal-housagotchi</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <name>portal-housagotchi</name>
     <description>A module for my personal portal, which turns my household into a Tamagotchi. Gamification of keeping
@@ -24,7 +24,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- default parameters used in the application. Override these with a Maven profile -->
-        <context.path>/portal/module/housagotchi</context.path>
         <environment>dev</environment>
 
         <!-- versions of dependencies -->
@@ -39,8 +38,13 @@
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
-            <version>${javaee.api.version}</version>
+            <version>7.0</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
         </dependency>
 
         <dependency>
@@ -51,12 +55,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-tomcat</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -109,13 +107,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -130,26 +121,16 @@
                     <include>**/bootstrap.properties</include>
                 </includes>
             </resource>
+            <resource>
+                <directory>${basedir}/src/main/public</directory>
+                <targetPath>public</targetPath>
+            </resource>
         </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>${maven.resources.plugin.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>${maven.war.plugin.version}</version>
-                <configuration>
-                    <warSourceDirectory>${basedir}/src/main/webapp/dist</warSourceDirectory>
-                    <webResources>
-                        <resource>
-                            <directory>${basedir}/src/main/webapp/dist</directory>
-                            <filtering>true</filtering>
-                        </resource>
-                    </webResources>
-                </configuration>
             </plugin>
 
             <plugin>
