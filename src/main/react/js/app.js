@@ -4,6 +4,9 @@ import HousagotchiCreature from "./components/HousagotchiCreature/HousagotchiCre
 import HousagotchiAddExecution from "./components/HousagotchiAddExecution/HousagotchiAddExecution";
 import HousagotchiManageRecurringTasks from "./components/HousagotchiManageRecurringTasks/HousagotchiManageRecurringTasks";
 import {Tab, TabList, TabPanel, Tabs} from 'react-tabs';
+import configureStore from "./store/configureStore";
+import {Provider} from "react-redux";
+import {findAllRecurringTasks} from "./actions/recurringTaskActions";
 
 class Housagotchi extends React.Component {
     render() {
@@ -16,7 +19,7 @@ class Housagotchi extends React.Component {
                         <Tab>Manage tasks</Tab>
                     </TabList>
                     <TabPanel>
-                        <HousagotchiAddExecution/>
+                        <HousagotchiAddExecution />
                     </TabPanel>
                     <TabPanel>
                         <HousagotchiManageRecurringTasks/>
@@ -29,8 +32,16 @@ class Housagotchi extends React.Component {
 
 
 (function() {
+
+    const store = configureStore();
+    store.dispatch(findAllRecurringTasks());
+
     ReactDOM.render(
-        <Housagotchi />,
+
+        <Provider store={store}>
+            <Housagotchi />
+        </Provider>,
+
         document.getElementById("main")
     );
 })();

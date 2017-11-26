@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 public class ExecutionDTO {
 
     @Getter

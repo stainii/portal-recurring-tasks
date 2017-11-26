@@ -41,6 +41,8 @@ public class RecurringTaskDTO {
     @Getter
     public LocalDateTime lastExecution;
 
+    public RecurringTaskDTO() {}
+
     public RecurringTaskDTO(String name, int minNumberOfDaysBetweenExecutions, int maxNumberOfDaysBetweenExecutions) {
         this.name = name;
         this.minNumberOfDaysBetweenExecutions = minNumberOfDaysBetweenExecutions;

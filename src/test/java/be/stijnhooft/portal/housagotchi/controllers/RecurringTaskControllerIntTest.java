@@ -64,7 +64,7 @@ public class RecurringTaskControllerIntTest {
     @DatabaseTearDown("/datasets/clear.xml")
     public void findById() throws Exception {
         RecurringTaskDTO recurringTask = new RecurringTaskDTO(2, "Watering the plants", 3, 4, LocalDateTime.of(2017, Month.OCTOBER, 23, 19, 5));
-        ResponseEntity<RecurringTaskDTO> response = controller.findById(2);
+        ResponseEntity<RecurringTaskDTO> response = controller.findById(2L);
         assertEquals(recurringTask, response.getBody());
     }
 
@@ -72,7 +72,7 @@ public class RecurringTaskControllerIntTest {
     @DatabaseSetup("/datasets/RecurringTaskControllerTest-findAll-initial.xml")
     @DatabaseTearDown("/datasets/clear.xml")
     public void findByIdWhenItDoesNotExist() throws Exception {
-        ResponseEntity<RecurringTaskDTO> response = controller.findById(100);
+        ResponseEntity<RecurringTaskDTO> response = controller.findById(100L);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
@@ -93,7 +93,7 @@ public class RecurringTaskControllerIntTest {
     @DatabaseTearDown("/datasets/clear.xml")
     public void updateWhenSuccess() throws Exception {
         RecurringTaskDTO recurringTask = new RecurringTaskDTO(1, "Dusting the bedroom", 3, 5, LocalDateTime.now());
-        controller.update(recurringTask, 1);
+        controller.update(recurringTask, 1L);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -101,7 +101,7 @@ public class RecurringTaskControllerIntTest {
     @DatabaseTearDown("/datasets/clear.xml")
     public void updateWhenRecurrentTaskDoesNotExist() throws Exception {
         RecurringTaskDTO recurringTask = new RecurringTaskDTO(100, "Dusting the bedroom", 3, 5, LocalDateTime.now());
-        controller.update(recurringTask, 100);
+        controller.update(recurringTask, 100L);
     }
 
     @Test
@@ -109,7 +109,7 @@ public class RecurringTaskControllerIntTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Updating the id is not allowed");
 
-        controller.update(new RecurringTaskDTO(1, "a", 1, 1,null), 2);
+        controller.update(new RecurringTaskDTO(1, "a", 1, 1,null), 2L);
     }
 
     @Test
@@ -118,14 +118,14 @@ public class RecurringTaskControllerIntTest {
             assertionMode = DatabaseAssertionMode.NON_STRICT)
     @DatabaseTearDown("/datasets/clear.xml")
     public void delete() throws Exception {
-        controller.delete(2);
+        controller.delete(2L);
     }
 
     @Test(expected = EmptyResultDataAccessException.class)
     @DatabaseSetup("/datasets/RecurringTaskControllerTest-delete-initial.xml")
     @DatabaseTearDown("/datasets/clear.xml")
     public void deleteWhenRecurrentTaskDoesNotExist() throws Exception {
-        controller.delete(100);
+        controller.delete(100L);
     }
 
     @Test
@@ -134,13 +134,13 @@ public class RecurringTaskControllerIntTest {
             assertionMode = DatabaseAssertionMode.NON_STRICT)
     @DatabaseTearDown("/datasets/clear.xml")
     public void addExecutionWhenSuccess() throws Exception {
-        controller.addExecution(new ExecutionDTO(LocalDateTime.of(2017, Month.OCTOBER, 23, 21, 30)), 1);
+        controller.addExecution(new ExecutionDTO(LocalDateTime.of(2017, Month.OCTOBER, 23, 21, 30)), 1L);
     }
 
     @Test(expected = IllegalArgumentException.class)
     @DatabaseSetup("/datasets/RecurringTaskControllerTest-addExecution-initial.xml")
     @DatabaseTearDown("/datasets/clear.xml")
     public void addExecutionWhenRecurrentTaskDoesNotExist() throws Exception {
-        controller.addExecution(new ExecutionDTO(LocalDateTime.now()), 100);
+        controller.addExecution(new ExecutionDTO(LocalDateTime.now()), 100L);
     }
 }

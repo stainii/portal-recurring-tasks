@@ -1,20 +1,34 @@
 import React from "react";
 
 import moment from "moment";
+import {connect} from "react-redux";
+import * as executionActions from "../../actions/executionActions";
+import {bindActionCreators} from "redux";
 
 class HousagotchiAddExecution extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {task: '', date: moment().format("YYYY-MM-DD")};
+        if (!props.recurringTasks) {
+            props.recurringTasks = [];
+        }
+        console.log("constructor: " , props);
+        this.state = {date: moment().format("YYYY-MM-DD")};
 
         this.handleChangeOfTask = this.handleChangeOfTask.bind(this);
         this.handleChangeOfDate = this.handleChangeOfDate.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    componentWillReceiveProps(newProps) {
+        console.log("componentWillReceiveProps: " , newProps);
+        if (this.props.recurringTasks.length == 0 && newProps.recurringTasks.length > 0) {
+            this.setState({date: this.state.date, recurringTaskId: newProps.recurringTasks[0].id});
+        }
+    }
+
     handleChangeOfTask(event) {
-        this.setState({task: event.target.value});
+        this.setState({recurringTaskId: event.target.value});
     }
 
     handleChangeOfDate(event) {
@@ -22,8 +36,11 @@ class HousagotchiAddExecution extends React.Component {
     }
 
     handleSubmit(event) {
-        alert(this.state.task + " was executed at " + this.state.date);
         event.preventDefault();
+        this.props.actions.addExecution({
+            recurringTaskId: this.state.recurringTaskId,
+            date: this.state.date
+        });
     }
 
     render() {
@@ -34,12 +51,18 @@ class HousagotchiAddExecution extends React.Component {
                         <label htmlFor="task">What did you do?</label>
                         <select className="form-control"
                                 id="task"
-                                value={this.state.task}
+                                value={this.state.recurringTaskId}
                                 onChange={this.handleChangeOfTask}>
-                            <option value="grapefruit">Grapefruit</option>
-                            <option value="lime">Lime</option>
-                            <option value="coconut">Coconut</option>
-                            <option value="mango">Mango</option>
+
+                            {
+                                this.props.recurringTasks.map( recurringTask => {
+                                    return <option key={recurringTask.id}
+                                                   value={recurringTask.id}>
+                                            {recurringTask.name}
+                                        </option>
+                                })
+                            }
+
                         </select>
                     </div>
                     <div className="form-group">
@@ -56,4 +79,18 @@ class HousagotchiAddExecution extends React.Component {
     };
 }
 
-export default HousagotchiAddExecution;
+
+//configure redux
+const mapStateToProps = (state, ownProps) => {
+    return {
+        recurringTasks: state.recurringTasks
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        actions: bindActionCreators(executionActions, dispatch)
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HousagotchiAddExecution);

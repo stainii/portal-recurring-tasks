@@ -27,7 +27,7 @@ gulp.task("clean", function() {
         .pipe(clean());
 });
 
-gulp.task("connect", ["html", "js", "sass", "static"], function () {
+gulp.task("connect", ["clean", "html", "js", "sass", "static"], function () {
     connect.server({
         root: [config.paths.dist],
         port: config.port,

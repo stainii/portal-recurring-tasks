@@ -1,68 +1,55 @@
 import React from "react";
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
+import * as recurringTaskActions from "../../actions/recurringTaskActions";
 
 class HousagotchiManageRecurringTasks extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {name: '', minNumberOfDaysBetweenExecutions: 7, maxNumberOfDaysBetweenExecutions: 14};
+
+        this.getTasks = this.getTasks.bind(this);
+        this.onAfterInsertRow = this.onAfterInsertRow.bind(this);
+        this.onAfterDeleteRow = this.onAfterDeleteRow.bind(this);
+        this.onBeforeSaveCell = this.onBeforeSaveCell.bind(this);
+        this.onAfterSaveCell = this.onAfterSaveCell.bind(this);
 
 
         this.options = {
             afterInsertRow: this.onAfterInsertRow,
             afterDeleteRow: this.onAfterDeleteRow,
-            afterDeleteRow: this.onAfterDeleteRow,
-            beforeSaveCell: this.onBeforeSaveCell, // a hook for before saving cell
-            afterSaveCell: this.onAfterSaveCell  // a hook for after saving cell
+            beforeSaveCell: this.onBeforeSaveCell,
+            afterSaveCell: this.onAfterSaveCell
         };
 
         this.cellEditProp = {
             mode: 'click',
             blurToSave: true,
-            beforeSaveCell: this.onBeforeSaveCell, // a hook for before saving cell
-            afterSaveCell: this.onAfterSaveCell  // a hook for after saving cell
+            beforeSaveCell: this.onBeforeSaveCell,
+            afterSaveCell: this.onAfterSaveCell
         };
-
-        this.getTasks = this.getTasks.bind(this);
-        this.onAfterInsertRow = this.onAfterInsertRow.bind(this);
     }
 
     getTasks() {
-        return [{
-            id: 1,
-            name: "Task 1",
-            minNumberOfDaysBetweenExecutions: 7,
-            maxNumberOfDaysBetweenExecutions: 14,
-        }, {
-            id: 2,
-            name: "Task 2",
-            minNumberOfDaysBetweenExecutions: 5,
-            maxNumberOfDaysBetweenExecutions: 9,
-        }];
+        if (this.props.recurringTasks) {
+            return this.props.recurringTasks;
+        } else {
+            return [];
+        }
     }
 
     onAfterInsertRow(row) {
-        let newRowStr = '';
-
-        for (const prop in row) {
-            newRowStr += prop + ': ' + row[prop] + ' \n';
-        }
-        alert('The new row is:\n ' + newRowStr);
+        this.props.actions.createRecurringTask(row);
     }
 
     onAfterDeleteRow(rowKeys) {
-        alert('The rowkey you drop: ' + rowKeys);
+        const self = this;
+        rowKeys.forEach(rowKey => self.props.actions.deleteRecurringTask(rowKey));
     }
 
     onAfterSaveCell(row, cellName, cellValue) {
-        alert(`Save cell ${cellName} with value ${cellValue}`);
-
-        let rowStr = '';
-        for (const prop in row) {
-            rowStr += prop + ': ' + row[prop] + '\n';
-        }
-
-        alert('The whole row :\n' + rowStr);
+        this.props.actions.updateRecurringTask(row);
     }
 
     onBeforeSaveCell(row, cellName, cellValue) {
@@ -94,4 +81,19 @@ class HousagotchiManageRecurringTasks extends React.Component {
 
 }
 
-export default HousagotchiManageRecurringTasks;
+
+//configure redux
+const mapStateToProps = (state, ownProps) => {
+    console.log("update state to ", state);
+    return {
+        recurringTasks: state.recurringTasks
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        actions: bindActionCreators(recurringTaskActions, dispatch)
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HousagotchiManageRecurringTasks);

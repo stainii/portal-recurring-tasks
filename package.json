@@ -13,13 +13,18 @@
     "gulp-clean": "^0.3.2",
     "lie": "^3.1.1",
     "lodash": "^4.17.4",
+    "lodash.clonedeep": "^4.5.0",
     "moment": "^2.19.1",
     "react": "^15.6.1",
     "react-bootstrap-table": "^4.1.4",
     "react-dom": "^15.6.1",
+    "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
     "react-tabs": "^2.1.0",
-    "stijnhooft-portal-front-end-library": "0.0.1"
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
+    "stijnhooft-portal-front-end-library": "0.0.1",
+    "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

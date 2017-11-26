@@ -10,7 +10,8 @@
 
     <name>portal-housagotchi</name>
     <description>A module for my personal portal, which turns my household into a Tamagotchi. Gamification of keeping
-        the house clean, you know...</description>
+        the house clean, you know...
+    </description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -33,6 +34,18 @@
         <maven.war.plugin.version>3.0.0</maven.war.plugin.version>
         <frontend.maven.plugin.version>1.4</frontend.maven.plugin.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>2.9.0</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -107,6 +120,19 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- support for Java 8 datetime types -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-parameter-names</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
