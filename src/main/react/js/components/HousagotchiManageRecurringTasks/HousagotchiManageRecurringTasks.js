@@ -84,7 +84,6 @@ class HousagotchiManageRecurringTasks extends React.Component {
 
 //configure redux
 const mapStateToProps = (state, ownProps) => {
-    console.log("update state to ", state);
     return {
         recurringTasks: state.recurringTasks
     };

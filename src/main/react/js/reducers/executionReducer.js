@@ -1,7 +1,8 @@
 import * as types from "../actions/actionTypes";
 import cloneDeep from "lodash.clonedeep";
+import {initialState} from "../initialState";
 
-export default function executionReducer(state = [] , action) {
+export default function executionReducer(state = initialState.recurringTasks , action) {
     const copyOfState = cloneDeep(state);
 
     switch (action.type) {

@@ -1,5 +1,6 @@
 import * as types from "./actionTypes";
 import "whatwg-fetch";
+import {ajaxCallEnded, ajaxCallStarted} from "./ajaxCallActions";
 
 export function findAllRecurringTasksSuccess(recurringTasks) {
     return {
@@ -31,36 +32,57 @@ export function deleteRecurringTaskSuccess(recurringTaskId) {
 
 export function findAllRecurringTasks() {
     return (dispatch) => {
+
+        dispatch(ajaxCallStarted());
+
         return fetch("/api/recurring-task/")
             .then(response => response.json())
-            .then(recurringTasks => dispatch(findAllRecurringTasksSuccess(recurringTasks)));
+            .then(recurringTasks => dispatch(findAllRecurringTasksSuccess(recurringTasks)))
+            .then(() => dispatch(ajaxCallEnded()));
     };
 }
 
 export function createRecurringTask(recurringTask) {
     return (dispatch) => {
+
+        dispatch(ajaxCallStarted());
+
         return fetch("/api/recurring-task/", {
             method: "POST",
             body: JSON.stringify(recurringTask),
             headers: new Headers({'content-type': 'application/json'})
-        }).then(() => dispatch(createRecurringTaskSuccess(recurringTask)));
+        })
+        .then(response => response.json())
+        .then(createdRecurringTask => dispatch(createRecurringTaskSuccess(createdRecurringTask)))
+        .then(() => dispatch(ajaxCallEnded()));
     };
 }
 
 export function updateRecurringTask(recurringTask) {
     return (dispatch) => {
+
+        dispatch(ajaxCallStarted());
+
         return fetch("/api/recurring-task/" + recurringTask.id + "/", {
             method: "PUT",
             body: JSON.stringify(recurringTask),
             headers: new Headers({'content-type': 'application/json'})
-        }).then(() => dispatch(updateRecurringTaskSuccess(recurringTask)));
+        })
+        .then(() => dispatch(updateRecurringTaskSuccess(recurringTask)))
+        .then(() => dispatch(ajaxCallEnded()));
+
     };
 }
 
 export function deleteRecurringTask(id) {
     return (dispatch) => {
+
+        dispatch(ajaxCallStarted());
+
         return fetch("/api/recurring-task/" + id + "/", {
             method: "DELETE"
-        }).then(() => dispatch(deleteRecurringTaskSuccess(id)));
+        })
+        .then(() => dispatch(deleteRecurringTaskSuccess(id)))
+        .then(() => dispatch(ajaxCallEnded()));
     };
 }

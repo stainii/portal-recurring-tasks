@@ -7,12 +7,17 @@ import {Tab, TabList, TabPanel, Tabs} from 'react-tabs';
 import configureStore from "./store/configureStore";
 import {Provider} from "react-redux";
 import {findAllRecurringTasks} from "./actions/recurringTaskActions";
+import LoadingBarComponent from "./components/LoadingBarComponent/LoadingBarComponent";
 
 class Housagotchi extends React.Component {
     render() {
         return (
             <div className="housagotchi-component">
+
+                <LoadingBarComponent/>
+
                 <HousagotchiCreature/>
+
                 <Tabs className="tabs">
                     <TabList>
                         <Tab>Add execution</Tab>
@@ -25,6 +30,7 @@ class Housagotchi extends React.Component {
                         <HousagotchiManageRecurringTasks/>
                     </TabPanel>
                 </Tabs>
+
             </div>
         );
     }

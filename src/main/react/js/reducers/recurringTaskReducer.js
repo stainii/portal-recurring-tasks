@@ -1,7 +1,8 @@
 import * as types from "../actions/actionTypes";
-import {cloneDeep, findIndex} from "lodash";
+import {cloneDeep, findIndex, remove} from "lodash";
+import {initialState} from "../initialState";
 
-export default function recurringTaskReducer(state = [] , action) {
+export default function recurringTaskReducer(state =  initialState.recurringTasks , action) {
     const copyOfState = cloneDeep(state);
 
     switch (action.type) {
@@ -19,7 +20,8 @@ export default function recurringTaskReducer(state = [] , action) {
             return copyOfState;
 
         case types.DELETE_RECURRING_TASK_SUCCESS:
-            return remove(copyOfState, { id: action.recurringTaskId });
+            remove(copyOfState, { id: action.recurringTaskId });
+            return copyOfState;
 
         default:
             return state;
