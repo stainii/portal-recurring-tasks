@@ -4,6 +4,7 @@ import moment from "moment";
 import {connect} from "react-redux";
 import * as executionActions from "../../actions/executionActions";
 import {bindActionCreators} from "redux";
+import toastr from "toastr";
 
 class HousagotchiAddExecution extends React.Component {
 
@@ -40,7 +41,7 @@ class HousagotchiAddExecution extends React.Component {
         this.props.actions.addExecution({
             recurringTaskId: this.state.recurringTaskId,
             date: this.state.date
-        });
+        }).catch(error => toastr.error(error));
     }
 
     render() {

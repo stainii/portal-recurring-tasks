@@ -1,5 +1,6 @@
 import * as types from "./actionTypes";
 import {ajaxCallEnded, ajaxCallStarted} from "./ajaxCallActions";
+import {handleError} from "./handleErrors";
 
 export function addExecutionSuccess(execution) {
     return {
@@ -22,7 +23,8 @@ export function addExecution(execution) {
             body: JSON.stringify({date: dateAsISOString}),
             headers: new Headers({'content-type': 'application/json'})
         })
-        .then(() => dispatch(addExecutionSuccess(execution)))
-        .then(() => dispatch(ajaxCallEnded()));
+            .then(() => dispatch(addExecutionSuccess(execution)))
+            .then(() => dispatch(ajaxCallEnded()))
+            .catch(handleError(dispatch));
     };
 }

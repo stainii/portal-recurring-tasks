@@ -1,6 +1,7 @@
 import * as types from "./actionTypes";
 import "whatwg-fetch";
 import {ajaxCallEnded, ajaxCallStarted} from "./ajaxCallActions";
+import {checkHttpStatusCode, handleError} from "./handleErrors";
 
 export function findAllRecurringTasksSuccess(recurringTasks) {
     return {
@@ -36,9 +37,11 @@ export function findAllRecurringTasks() {
         dispatch(ajaxCallStarted());
 
         return fetch("/api/recurring-task/")
+            .then(checkHttpStatusCode)
             .then(response => response.json())
             .then(recurringTasks => dispatch(findAllRecurringTasksSuccess(recurringTasks)))
-            .then(() => dispatch(ajaxCallEnded()));
+            .then(() => dispatch(ajaxCallEnded()))
+            .catch(handleError(dispatch));
     };
 }
 
@@ -52,9 +55,11 @@ export function createRecurringTask(recurringTask) {
             body: JSON.stringify(recurringTask),
             headers: new Headers({'content-type': 'application/json'})
         })
-        .then(response => response.json())
-        .then(createdRecurringTask => dispatch(createRecurringTaskSuccess(createdRecurringTask)))
-        .then(() => dispatch(ajaxCallEnded()));
+            .then(checkHttpStatusCode)
+            .then(response => response.json())
+            .then(createdRecurringTask => dispatch(createRecurringTaskSuccess(createdRecurringTask)))
+            .then(() => dispatch(ajaxCallEnded()))
+            .catch(handleError(dispatch));
     };
 }
 
@@ -68,8 +73,10 @@ export function updateRecurringTask(recurringTask) {
             body: JSON.stringify(recurringTask),
             headers: new Headers({'content-type': 'application/json'})
         })
-        .then(() => dispatch(updateRecurringTaskSuccess(recurringTask)))
-        .then(() => dispatch(ajaxCallEnded()));
+            .then(checkHttpStatusCode)
+            .then(() => dispatch(updateRecurringTaskSuccess(recurringTask)))
+            .then(() => dispatch(ajaxCallEnded()))
+            .catch(handleError(dispatch));
 
     };
 }
@@ -82,7 +89,9 @@ export function deleteRecurringTask(id) {
         return fetch("/api/recurring-task/" + id + "/", {
             method: "DELETE"
         })
-        .then(() => dispatch(deleteRecurringTaskSuccess(id)))
-        .then(() => dispatch(ajaxCallEnded()));
+            .then(checkHttpStatusCode)
+            .then(() => dispatch(deleteRecurringTaskSuccess(id)))
+            .then(() => dispatch(ajaxCallEnded()))
+            .catch(handleError(dispatch));
     };
 }

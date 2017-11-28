@@ -3,6 +3,7 @@ import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import * as recurringTaskActions from "../../actions/recurringTaskActions";
+import toastr from "toastr";
 
 class HousagotchiManageRecurringTasks extends React.Component {
 
@@ -40,16 +41,24 @@ class HousagotchiManageRecurringTasks extends React.Component {
     }
 
     onAfterInsertRow(row) {
-        this.props.actions.createRecurringTask(row);
+        this.props.actions
+            .createRecurringTask(row)
+            .catch(error => toastr.error(error.message));
     }
 
     onAfterDeleteRow(rowKeys) {
         const self = this;
-        rowKeys.forEach(rowKey => self.props.actions.deleteRecurringTask(rowKey));
+        rowKeys.forEach(rowKey => {
+            self.props.actions
+                .deleteRecurringTask(rowKey)
+                .catch(error => toastr.error(error.message));
+        });
     }
 
     onAfterSaveCell(row, cellName, cellValue) {
-        this.props.actions.updateRecurringTask(row);
+        this.props.actions
+            .updateRecurringTask(row)
+            .catch(error => toastr.error(error.message));;
     }
 
     onBeforeSaveCell(row, cellName, cellValue) {

@@ -1,5 +1,5 @@
 import * as types from "../actions/actionTypes";
-import {initialState} from "../initialState";
+import {initialState} from "../store/initialState";
 
 export default function ajaxCallReducer(state = initialState.numberOfAjaxCallsInProgress , action) {
 
