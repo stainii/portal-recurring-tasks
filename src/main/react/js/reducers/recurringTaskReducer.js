@@ -28,10 +28,10 @@ export default function recurringTaskReducer(state =  initialState.recurringTask
             for (let task of copyOfState) {
 
                 let newExecutionIsLaterThanLatestKnownExecution =
-                    task.lastExecution === undefined
+                    task.lastExecution == undefined
                     || moment(task.lastExecution).isBefore(moment(action.execution.date));
 
-                if (task.id === action.execution.recurringTaskId
+                if (task.id == action.execution.recurringTaskId
                     && newExecutionIsLaterThanLatestKnownExecution) {
                     task.lastExecution = action.execution.date;
                 }

@@ -1,20 +1,27 @@
 import React from "react";
 import HousagotchiBalloon from "../HousagotchiBalloon/HousagotchiBalloon";
+import {connect} from "react-redux";
+import mapStateToPropsForHousagotchiCreature from "../../mappers/StateToPropsForHousagotchiCreatureMapper";
 
-class HousagotchiCreature extends React.Component {
+const HousagotchiCreature = ({urgentMessages, normalMessages, mood}) => {
 
-    constructor(props) {
-        super(props);
-        this.state = { mood: "happy"}
-    }
-    render() {
-        return (
-            <div className="housagotchi-creature">
-                <img src={"/static/imgs/creature/" + this.state.mood + ".png"} />
-                <HousagotchiBalloon text="Hey! Nothing to do!! I'm happy!!!"/>
-            </div>
-        );
-    }
-}
+    return (
+        <div className="housagotchi-creature">
+            <img src={"/static/imgs/creature/" + mood + ".png"} />
+            <HousagotchiBalloon>
+                {
+                    urgentMessages.map(message => {
+                        return <p key={message} className="urgent">{message}</p>
+                    })
+                }
+                {
+                    normalMessages.map(message => {
+                        return <p key={message}>{message}</p>
+                    })
+                }
+            </HousagotchiBalloon>
+        </div>
+    );
+};
 
-export default HousagotchiCreature;
+export default connect(mapStateToPropsForHousagotchiCreature)(HousagotchiCreature);
