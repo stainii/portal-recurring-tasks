@@ -4,7 +4,7 @@
   "description": "Front-end for the Portal Housagotchi component",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha 'src/main/react/test/**/*.test.js' --require babel-register",
     "build": "npm update --dev && gulp"
   },
   "author": "Stijn Hooft",
@@ -36,6 +36,7 @@
     "babel-preset-react": "^6.24.1",
     "babelify": "^7.3.0",
     "browserify": "^14.4.0",
+    "expect": "^21.2.1",
     "gulp": "^3.9.1",
     "gulp-api-proxy": "^1.0.0",
     "gulp-babel": "^7.0.0",
@@ -44,7 +45,14 @@
     "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "^2.6.1",
     "gulp-uglify": "^3.0.0",
+    "mocha": "^4.0.1",
     "vinyl-source-stream": "^1.1.0"
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "react"
+    ]
   },
   "browserify": {
     "transform": [

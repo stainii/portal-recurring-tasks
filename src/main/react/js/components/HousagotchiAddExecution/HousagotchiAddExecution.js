@@ -83,6 +83,7 @@ class HousagotchiAddExecution extends React.Component {
 
 //configure redux
 const mapStateToProps = (state, ownProps) => {
+    console.log("new state: ", state);
     return {
         recurringTasks: state.recurringTasks
     };

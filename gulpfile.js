@@ -13,7 +13,7 @@ var config = {
     devBaseUrl: "http://localhost",
     paths: {
         html: "./src/main/react/*.html",
-        js: "./src/main/react/js/**/*.js",
+        js: ["./src/main/react/js/**/*.js", "!./test"],
         sass: "./src/main/react/**/*.scss",
         mainJS: "./src/main/react/js/app.js",
         static: "./src/main/react/static/**/*",
