@@ -8,6 +8,7 @@ import org.junit.Test;
 import java.time.LocalDateTime;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class RecurringTaskMapperTest {
 
@@ -20,11 +21,11 @@ public class RecurringTaskMapperTest {
 
     @Test
     public void map() {
-        RecurringTaskDTO recurringTaskDTO = new RecurringTaskDTO(1, "test", 1, 3, LocalDateTime.now());
+        RecurringTaskDTO recurringTaskDTO = new RecurringTaskDTO(Long.valueOf(1), "test", 1, 3, LocalDateTime.now());
 
         RecurringTask recurringTask = mapper.map(recurringTaskDTO);
 
-        assertEquals(0, recurringTask.getId());
+        assertNull(recurringTask.getId());
         assertEquals("test", recurringTask.getName());
         assertEquals(1, recurringTask.getMinNumberOfDaysBetweenExecutions());
         assertEquals(3, recurringTask.getMaxNumberOfDaysBetweenExecutions());

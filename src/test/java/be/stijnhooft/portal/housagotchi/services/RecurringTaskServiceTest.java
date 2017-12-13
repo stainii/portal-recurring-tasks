@@ -45,7 +45,7 @@ public class RecurringTaskServiceTest {
     public void findAll() throws Exception {
         //data set
         List<RecurringTask> recurringTasks = Arrays.asList(new RecurringTask());
-        List<RecurringTaskDTO> recurringTaskDTOs = Arrays.asList(new RecurringTaskDTO(1, "test", 1, 2, null));
+        List<RecurringTaskDTO> recurringTaskDTOs = Arrays.asList(new RecurringTaskDTO(Long.valueOf(1), "test", 1, 2, null));
 
         //mocking
         doReturn(recurringTasks).when(recurringTaskRepository).findAll();
@@ -69,10 +69,10 @@ public class RecurringTaskServiceTest {
     @Test
     public void create() {
         //data set
-        RecurringTaskDTO recurringTaskDTO = new RecurringTaskDTO(0, "test", 1, 3, null);
+        RecurringTaskDTO recurringTaskDTO = new RecurringTaskDTO(Long.valueOf(0), "test", 1, 3, null);
         RecurringTask recurringTask = new RecurringTask();
         RecurringTask savedRecurringTask = new RecurringTask();
-        RecurringTaskDTO savedRecurringTaskDTO = new RecurringTaskDTO(1, "test", 1, 3, null);
+        RecurringTaskDTO savedRecurringTaskDTO = new RecurringTaskDTO(Long.valueOf(1), "test", 1, 3, null);
 
         //mock
         doReturn(recurringTask).when(recurringTaskMapper).map(recurringTaskDTO);

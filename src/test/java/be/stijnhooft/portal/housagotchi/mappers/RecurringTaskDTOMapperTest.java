@@ -47,7 +47,7 @@ public class RecurringTaskDTOMapperTest {
 
         RecurringTaskDTO recurringTaskDTO = mapper.map(recurringTask);
 
-        assertEquals(10, recurringTaskDTO.getId());
+        assertEquals(Long.valueOf(10), recurringTaskDTO.getId());
         assertEquals("test", recurringTaskDTO.getName());
         assertEquals(1, recurringTaskDTO.getMinNumberOfDaysBetweenExecutions());
         assertEquals(3, recurringTaskDTO.getMaxNumberOfDaysBetweenExecutions());

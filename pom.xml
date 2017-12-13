@@ -76,6 +76,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
@@ -141,10 +146,9 @@
                 <directory>${basedir}/src/main/resources</directory>
                 <filtering>true</filtering>
                 <includes>
-                    <include>**/application.yml</include>
-                    <include>**/application.properties</include>
-                    <include>**/bootstrap.yml</include>
-                    <include>**/bootstrap.properties</include>
+                    <include>**/*.yml</include>
+                    <include>**/*.properties</include>
+                    <include>**/*.yaml</include>
                 </includes>
             </resource>
             <resource>

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class RecurringTaskDTO {
 
     @Getter
-    private long id;
+    private Long id;
 
     @Getter
     @NonNull
@@ -49,7 +49,7 @@ public class RecurringTaskDTO {
         this.maxNumberOfDaysBetweenExecutions = maxNumberOfDaysBetweenExecutions;
     }
 
-    public RecurringTaskDTO(long id, String name, int minNumberOfDaysBetweenExecutions, int maxNumberOfDaysBetweenExecutions, LocalDateTime lastExecution) {
+    public RecurringTaskDTO(Long id, String name, int minNumberOfDaysBetweenExecutions, int maxNumberOfDaysBetweenExecutions, LocalDateTime lastExecution) {
         this(name, minNumberOfDaysBetweenExecutions, maxNumberOfDaysBetweenExecutions);
         this.id = id;
         this.lastExecution = lastExecution;

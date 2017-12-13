@@ -1,0 +1,59 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Stijn Hooft
+      changes:
+        - createTable:
+            tableName: recurring_task
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: max_number_of_days_between_executions
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: min_number_of_days_between_executions
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+        - createSequence:
+            incrementBy: 50
+            sequenceName: recurring_task_id_sequence
+
+        - createTable:
+            tableName: execution
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: recurring_task_id
+                  type: bigint
+        - createSequence:
+              incrementBy: 50
+              sequenceName: execution_id_sequence
+        - addForeignKeyConstraint:
+              baseColumnNames: recurring_task_id
+              baseTableName: execution
+              constraintName: execution_recurring_task_id_fk
+              referencedColumnNames: id
+              referencedTableName: recurring_task

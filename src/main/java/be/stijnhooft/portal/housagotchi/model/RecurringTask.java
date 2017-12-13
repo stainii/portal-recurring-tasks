@@ -20,8 +20,7 @@ public class RecurringTask {
     @Id
     @GeneratedValue(generator = "recurringTaskIdGenerator")
     @Getter
-    @NonNull
-    protected long id;
+    protected Long id;
 
     @Getter
     @NonNull
