@@ -5,7 +5,7 @@ import be.stijnhooft.portal.housagotchi.model.RecurringTask;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -15,13 +15,13 @@ public class RecurringTaskMapperTest {
     private RecurringTaskMapper mapper;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         this.mapper = new RecurringTaskMapper();
     }
 
     @Test
     public void map() {
-        RecurringTaskDTO recurringTaskDTO = new RecurringTaskDTO(Long.valueOf(1), "test", 1, 3, LocalDateTime.now());
+        RecurringTaskDTO recurringTaskDTO = new RecurringTaskDTO(1L, "test", 1, 3, LocalDate.now());
 
         RecurringTask recurringTask = mapper.map(recurringTaskDTO);
 

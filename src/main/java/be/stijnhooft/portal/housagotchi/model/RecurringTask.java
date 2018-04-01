@@ -31,7 +31,6 @@ public class RecurringTask {
      * It's not necessary to execute this task more regularly.
      **/
     @Getter
-    @NonNull
     private int minNumberOfDaysBetweenExecutions;
 
     /**
@@ -39,7 +38,6 @@ public class RecurringTask {
      * The Housagotchi is going to be very mad when this value gets exceeded.
      **/
     @Getter
-    @NonNull
     private int maxNumberOfDaysBetweenExecutions;
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -80,10 +78,10 @@ public class RecurringTask {
     private void checkData(@NonNull String name, int minNumberOfDaysBetweenExecutions, int maxNumberOfDaysBetweenExecutions) {
         if (minNumberOfDaysBetweenExecutions <= 0
                 || maxNumberOfDaysBetweenExecutions <= 0) {
-            throw new IllegalArgumentException(String.format("The number of days between executions need to be greater than 0. Min: /s, max: /s", name, minNumberOfDaysBetweenExecutions, maxNumberOfDaysBetweenExecutions));
+            throw new IllegalArgumentException(String.format("Task %s: The number of days between executions need to be greater than 0. Min: %s, max: %s", name, minNumberOfDaysBetweenExecutions, maxNumberOfDaysBetweenExecutions));
         }
         if (maxNumberOfDaysBetweenExecutions < minNumberOfDaysBetweenExecutions) {
-            throw new IllegalArgumentException(String.format("The maximum number of days between executions cannot be smaller than the minimum. Min: /s, max: /s", name, minNumberOfDaysBetweenExecutions, maxNumberOfDaysBetweenExecutions));
+            throw new IllegalArgumentException(String.format("Task %s: The maximum number of days between executions cannot be smaller than the minimum. Min: %s, max: %s", name, minNumberOfDaysBetweenExecutions, maxNumberOfDaysBetweenExecutions));
         }
     }
 }

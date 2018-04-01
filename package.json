@@ -25,7 +25,7 @@
     "react-tabs": "^2.1.0",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
-    "stijnhooft-portal-front-end-library": "0.0.1",
+    "stijnhooft-portal-front-end-library": "0.0.2",
     "toastr": "^2.1.2",
     "whatwg-fetch": "^2.0.3"
   },

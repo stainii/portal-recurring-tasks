@@ -14,7 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +42,7 @@ public class RecurringTaskServiceTest {
     private ExecutionMapper executionMapper;
 
     @Test
-    public void findAll() throws Exception {
+    public void findAll() {
         //data set
         List<RecurringTask> recurringTasks = Arrays.asList(new RecurringTask());
         List<RecurringTaskDTO> recurringTaskDTOs = Arrays.asList(new RecurringTaskDTO(Long.valueOf(1), "test", 1, 2, null));
@@ -130,7 +130,7 @@ public class RecurringTaskServiceTest {
     @Test
     public void addExecution() {
         //data set
-        ExecutionDTO executionDTO = new ExecutionDTO(LocalDateTime.now());
+        ExecutionDTO executionDTO = new ExecutionDTO(LocalDate.now());
         Execution execution = new Execution();
         RecurringTask recurringTask = new RecurringTask();
         RecurringTaskDTO recurringTaskDTO = new RecurringTaskDTO(10L, "test", 1, 2, null);

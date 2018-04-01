@@ -6,7 +6,7 @@ import be.stijnhooft.portal.housagotchi.model.RecurringTask;
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.Optional;
 
@@ -15,7 +15,7 @@ public class RecurringTaskDTOMapper extends Mapper<RecurringTask, RecurringTaskD
 
     @Override
     public RecurringTaskDTO map(@NonNull RecurringTask recurringTask) {
-        LocalDateTime lastExecutionDate = getLastExecutionDate(recurringTask);
+        LocalDate lastExecutionDate = getLastExecutionDate(recurringTask);
 
         return new RecurringTaskDTO(
                 recurringTask.getId(),
@@ -26,7 +26,7 @@ public class RecurringTaskDTOMapper extends Mapper<RecurringTask, RecurringTaskD
         );
     }
 
-    private LocalDateTime getLastExecutionDate(@NonNull RecurringTask recurringTask) {
+    private LocalDate getLastExecutionDate(@NonNull RecurringTask recurringTask) {
         Optional<Execution> lastExecution = recurringTask.getExecutions().stream()
                 .max(Comparator.comparing(Execution::getDate));
 

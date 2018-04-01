@@ -43,7 +43,7 @@ public class RecurringTaskController {
 
     @RequestMapping(value = "/{id}/", method = RequestMethod.PUT)
     public RecurringTaskDTO update(@RequestBody RecurringTaskDTO recurringTask, @PathVariable( "id") Long id) {
-        if (id != recurringTask.getId()) {
+        if (!id.equals(recurringTask.getId())) {
             throw new IllegalArgumentException("Updating the id is not allowed");
         }
         return recurringTaskService.update(recurringTask);

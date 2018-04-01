@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @SequenceGenerator( name = "executionIdGenerator",
@@ -21,17 +21,16 @@ public class Execution {
     @Id
     @GeneratedValue(generator = "executionIdGenerator")
     @Getter
-    @NonNull
     private long id;
 
     @Getter
     @NonNull
-    private LocalDateTime date;
+    private LocalDate date;
 
     public Execution() {
     }
 
-    public Execution(LocalDateTime date) {
+    public Execution(LocalDate date) {
         this.date = date;
     }
 }

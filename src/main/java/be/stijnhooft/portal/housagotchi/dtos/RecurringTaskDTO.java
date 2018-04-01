@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @ToString
 @EqualsAndHashCode
@@ -23,7 +23,6 @@ public class RecurringTaskDTO {
      * It's not necessary to execute this task more regularly.
      **/
     @Getter
-    @NonNull
     private int minNumberOfDaysBetweenExecutions;
 
     /**
@@ -31,7 +30,6 @@ public class RecurringTaskDTO {
      * The Housagotchi is going to be very mad when this value gets exceeded.
      **/
     @Getter
-    @NonNull
     private int maxNumberOfDaysBetweenExecutions;
 
     /**
@@ -39,7 +37,7 @@ public class RecurringTaskDTO {
      * When never executed, this value is null
      **/
     @Getter
-    public LocalDateTime lastExecution;
+    private LocalDate lastExecution;
 
     public RecurringTaskDTO() {}
 
@@ -49,7 +47,7 @@ public class RecurringTaskDTO {
         this.maxNumberOfDaysBetweenExecutions = maxNumberOfDaysBetweenExecutions;
     }
 
-    public RecurringTaskDTO(Long id, String name, int minNumberOfDaysBetweenExecutions, int maxNumberOfDaysBetweenExecutions, LocalDateTime lastExecution) {
+    public RecurringTaskDTO(Long id, String name, int minNumberOfDaysBetweenExecutions, int maxNumberOfDaysBetweenExecutions, LocalDate lastExecution) {
         this(name, minNumberOfDaysBetweenExecutions, maxNumberOfDaysBetweenExecutions);
         this.id = id;
         this.lastExecution = lastExecution;

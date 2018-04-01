@@ -5,7 +5,7 @@ import be.stijnhooft.portal.housagotchi.model.Execution;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import static org.junit.Assert.assertEquals;
 
@@ -25,7 +25,7 @@ public class ExecutionMapperTest {
 
     @Test
     public void map() {
-        LocalDateTime date = LocalDateTime.now();
+        LocalDate date = LocalDate.now();
         ExecutionDTO executionDTO = new ExecutionDTO(date);
 
         Execution execution = mapper.map(executionDTO);

@@ -2,7 +2,7 @@ package be.stijnhooft.portal.housagotchi.dtos;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @EqualsAndHashCode
 @ToString
@@ -12,6 +12,6 @@ public class ExecutionDTO {
 
     @Getter
     @NonNull
-    private LocalDateTime date;
+    private LocalDate date;
 
 }

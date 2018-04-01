@@ -6,7 +6,7 @@ import be.stijnhooft.portal.housagotchi.model.RecurringTask;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.Month;
 
 import static org.junit.Assert.assertEquals;
@@ -17,12 +17,12 @@ public class RecurringTaskDTOMapperTest {
     private RecurringTaskDTOMapper mapper;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         this.mapper = new RecurringTaskDTOMapper();
     }
 
     @Test
-    public void mapWhenNoExecutionsExist() throws Exception {
+    public void mapWhenNoExecutionsExist() {
         RecurringTask recurringTask = new RecurringTask("test", 1, 3);
         RecurringTaskDTO recurringTaskDTO = mapper.map(recurringTask);
 
@@ -33,7 +33,7 @@ public class RecurringTaskDTOMapperTest {
     }
 
     @Test
-    public void mapWhenExecutionsExist() throws Exception {
+    public void mapWhenExecutionsExist() {
         RecurringTask recurringTask = new RecurringTask("test", 1, 3) {
             RecurringTask setId(long id) {
                 this.id = id;
@@ -41,9 +41,9 @@ public class RecurringTaskDTOMapperTest {
             }
         }.setId(10);
 
-        recurringTask.addExecution(new Execution(LocalDateTime.of(2017, Month.OCTOBER, 23, 10, 12)));
-        recurringTask.addExecution(new Execution(LocalDateTime.of(2017, Month.OCTOBER, 23, 15, 3)));
-        recurringTask.addExecution(new Execution(LocalDateTime.of(2017, Month.OCTOBER, 10, 15, 3)));
+        recurringTask.addExecution(new Execution(LocalDate.of(2017, Month.OCTOBER, 23)));
+        recurringTask.addExecution(new Execution(LocalDate.of(2017, Month.OCTOBER, 23)));
+        recurringTask.addExecution(new Execution(LocalDate.of(2017, Month.OCTOBER, 10)));
 
         RecurringTaskDTO recurringTaskDTO = mapper.map(recurringTask);
 
@@ -51,7 +51,7 @@ public class RecurringTaskDTOMapperTest {
         assertEquals("test", recurringTaskDTO.getName());
         assertEquals(1, recurringTaskDTO.getMinNumberOfDaysBetweenExecutions());
         assertEquals(3, recurringTaskDTO.getMaxNumberOfDaysBetweenExecutions());
-        assertEquals(LocalDateTime.of(2017, Month.OCTOBER, 23, 15, 3), recurringTaskDTO.getLastExecution());
+        assertEquals(LocalDate.of(2017, Month.OCTOBER, 23), recurringTaskDTO.getLastExecution());
     }
 
     @Test(expected = NullPointerException.class)
