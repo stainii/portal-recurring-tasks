@@ -1,0 +1,8 @@
+language: java
+jdk:
+  - oraclejdk8
+env:
+  - NODE_VERSION="8.11.1"
+before_install:
+  - nvm install $NODE_VERSION
+  - npm install -g gulp-cli
