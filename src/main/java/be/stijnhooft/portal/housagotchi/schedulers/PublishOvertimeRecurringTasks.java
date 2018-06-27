@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -32,29 +32,28 @@ public class PublishOvertimeRecurringTasks {
 
     @Scheduled(fixedRate = ONE_DAY, initialDelay = 10000)
     public void publishOvertimeRecurringTasks() {
-        List<Event> events = mapRecurringTasksThatTurnOvertimeToEvents();
+        Set<Event> events = mapRecurringTasksThatTurnOvertimeToEvents();
         events.addAll(mapRecurringTasksThatTurnSeriouslyOvertimeToEvents());
 
-        //Test data: events.add(new Event("housagotchi", LocalDateTime.now(), new HashMap<>()));
         if (!events.isEmpty()) {
             eventService.publishEvents(events);
         }
     }
 
-    private List<Event> mapRecurringTasksThatTurnOvertimeToEvents() {
+    private Set<Event> mapRecurringTasksThatTurnOvertimeToEvents() {
         return recurringTaskService.findAll()
                 .stream()
                 .filter(this::isTodayEqualToMinDueDate)
                 .map(eventMapper::map)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
-    private List<Event> mapRecurringTasksThatTurnSeriouslyOvertimeToEvents() {
+    private Set<Event> mapRecurringTasksThatTurnSeriouslyOvertimeToEvents() {
         return recurringTaskService.findAll()
                 .stream()
                 .filter(this::isTodayEqualToMaxDueDate)
                 .map(eventMapper::map)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     private boolean isTodayEqualToMinDueDate(RecurringTaskDTO task) {
