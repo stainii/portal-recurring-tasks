@@ -23,8 +23,9 @@ class HousagotchiAddExecution extends React.Component {
 
     componentWillReceiveProps(newProps) {
         console.log("componentWillReceiveProps: " , newProps);
-        if (this.props.recurringTasks.length == 0 && newProps.recurringTasks.length > 0) {
-            this.setState({date: this.state.date, recurringTaskId: newProps.recurringTasks[0].id});
+        if (this.props.recurringTasks.length === 0 && newProps.recurringTasks.length > 0) {
+            this.setState({date: this.state.date, recurringTaskId: newProps.recurringTasks[0].id}, function(state) {console.log("Stijn", state)});
+            console.log("Stijn2", this.state);
         }
     }
 

@@ -1,6 +1,5 @@
 package be.stijnhooft.portal.housagotchi;
 
-import be.stijnhooft.portal.housagotchi.services.EventService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,8 +7,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import org.apache.camel.CamelContext;
-import org.apache.camel.builder.ProxyBuilder;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,12 +45,5 @@ public class ModuleConfiguration {
                 .registerModule(new Jdk8Module())
                 .registerModule(new JavaTimeModule())
                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-    }
-
-    @Bean
-    public EventService createEventService(CamelContext camelContext) throws Exception {
-        return new ProxyBuilder(camelContext)
-                .endpoint("direct:eventService")
-                .build(EventService.class);
     }
 }

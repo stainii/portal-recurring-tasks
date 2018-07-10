@@ -9,10 +9,10 @@ import be.stijnhooft.portal.housagotchi.model.Execution;
 import be.stijnhooft.portal.housagotchi.model.RecurringTask;
 import be.stijnhooft.portal.housagotchi.repositories.RecurringTaskRepository;
 import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +24,7 @@ public class RecurringTaskService {
     private final RecurringTaskMapper recurringTaskMapper;
     private final ExecutionMapper executionMapper;
 
-    @Inject
+    @Autowired
     public RecurringTaskService(RecurringTaskRepository recurringTaskRepository, RecurringTaskDTOMapper recurringTaskDTOMapper, RecurringTaskMapper recurringTaskMapper, ExecutionMapper executionMapper) {
         this.recurringTaskRepository = recurringTaskRepository;
         this.recurringTaskDTOMapper = recurringTaskDTOMapper;
@@ -38,12 +38,8 @@ public class RecurringTaskService {
     }
 
     public Optional<RecurringTaskDTO> findById(long id) {
-        RecurringTask recurringTask = recurringTaskRepository.findOne(id);
-        if (recurringTask == null) {
-            return Optional.empty();
-        } else {
-            return Optional.of(recurringTaskDTOMapper.map(recurringTask));
-        }
+        return recurringTaskRepository.findById(id)
+                .map(recurringTaskDTOMapper::map);
     }
 
     public RecurringTaskDTO create(@NonNull RecurringTaskDTO recurringTaskDTO) {
@@ -53,32 +49,36 @@ public class RecurringTaskService {
     }
 
     public RecurringTaskDTO update(@NonNull RecurringTaskDTO recurringTaskDTO) {
-        RecurringTask recurringTaskToUpdate = recurringTaskRepository.findOne(recurringTaskDTO.getId());
+        Optional<RecurringTask> recurringTaskToUpdateOptional = recurringTaskRepository.findById(recurringTaskDTO.getId());
 
-        if (recurringTaskToUpdate == null ) {
+        if (!recurringTaskToUpdateOptional.isPresent()) {
             throw new IllegalArgumentException("Cannot find recurring task with id " + recurringTaskDTO.getId());
         }
 
-        recurringTaskToUpdate.update(recurringTaskDTO.getName(),
+        RecurringTask recurringTask = recurringTaskToUpdateOptional.get();
+        recurringTask.update(recurringTaskDTO.getName(),
                 recurringTaskDTO.getMinNumberOfDaysBetweenExecutions(),
                 recurringTaskDTO.getMaxNumberOfDaysBetweenExecutions());
 
-        return recurringTaskDTOMapper.map(recurringTaskToUpdate);
+        return recurringTaskDTOMapper.map(recurringTask);
     }
 
     public void delete(long id) {
-        recurringTaskRepository.delete(id);
+        recurringTaskRepository.deleteById(id);
     }
 
     public RecurringTaskDTO addExecution(@NonNull ExecutionDTO executionDTO, long recurringTaskId) {
-        RecurringTask recurringTask = recurringTaskRepository.findOne(recurringTaskId);
-        if (recurringTask == null ) {
+        Optional<RecurringTask> recurringTaskOptional = recurringTaskRepository.findById(recurringTaskId);
+        if (!recurringTaskOptional.isPresent()) {
             throw new IllegalArgumentException("Cannot find recurring task with id " + recurringTaskId);
+        } else {
+            RecurringTask recurringTask = recurringTaskOptional.get();
+
+            Execution execution = executionMapper.map(executionDTO);
+            recurringTask.addExecution(execution);
+
+            return recurringTaskDTOMapper.map(recurringTask);
         }
 
-        Execution execution = executionMapper.map(executionDTO);
-        recurringTask.addExecution(execution);
-
-        return recurringTaskDTOMapper.map(recurringTask);
     }
 }

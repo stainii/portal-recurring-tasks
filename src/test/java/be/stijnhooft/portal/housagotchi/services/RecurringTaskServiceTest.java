@@ -103,14 +103,14 @@ public class RecurringTaskServiceTest {
         RecurringTask recurringTask = new RecurringTask("oldName", 1, 1);
 
         //mock
-        doReturn(recurringTask).when(recurringTaskRepository).findOne(10L);
+        doReturn(Optional.of(recurringTask)).when(recurringTaskRepository).findById(10L);
         doReturn(newRecurringTaskDTO).when(recurringTaskDTOMapper).map(recurringTask);
 
         //execute
         RecurringTaskDTO result = recurringTaskService.update(recurringTaskDTO);
 
         //verify and assert
-        verify(recurringTaskRepository).findOne(10L);
+        verify(recurringTaskRepository).findById(10L);
         verify(recurringTaskDTOMapper).map(recurringTask);
 
         assertSame(newRecurringTaskDTO, result);
@@ -119,7 +119,7 @@ public class RecurringTaskServiceTest {
     @Test
     public void deleteWhenSuccess() {
         recurringTaskService.delete(10L);
-        verify(recurringTaskRepository).delete(10L);
+        verify(recurringTaskRepository).deleteById(10L);
     }
 
     @Test(expected = NullPointerException.class)
@@ -137,7 +137,7 @@ public class RecurringTaskServiceTest {
 
         //mock
         doReturn(execution).when(executionMapper).map(executionDTO);
-        doReturn(recurringTask).when(recurringTaskRepository).findOne(10L);
+        doReturn(Optional.of(recurringTask)).when(recurringTaskRepository).findById(10L);
         doReturn(recurringTaskDTO).when(recurringTaskDTOMapper).map(recurringTask);
 
         //execute
@@ -145,7 +145,7 @@ public class RecurringTaskServiceTest {
 
         //verify and assert
         verify(executionMapper).map(executionDTO);
-        verify(recurringTaskRepository).findOne(10L);
+        verify(recurringTaskRepository).findById(10L);
         verify(recurringTaskDTOMapper).map(recurringTask);
 
         assertSame(recurringTaskDTO, result);
@@ -160,14 +160,14 @@ public class RecurringTaskServiceTest {
         RecurringTaskDTO recurringTaskDTO = new RecurringTaskDTO(10L, "test", 2, 3, null);
 
         //mock
-        doReturn(recurringTask).when(recurringTaskRepository).findOne(10L);
+        doReturn(Optional.of(recurringTask)).when(recurringTaskRepository).findById(10L);
         doReturn(recurringTaskDTO).when(recurringTaskDTOMapper).map(recurringTask);
 
         //execute
         Optional<RecurringTaskDTO> result = recurringTaskService.findById(10L);
 
         //verify and assert
-        verify(recurringTaskRepository).findOne(10L);
+        verify(recurringTaskRepository).findById(10L);
         verify(recurringTaskDTOMapper).map(recurringTask);
 
         assertSame(recurringTaskDTO, result.get());
@@ -176,13 +176,13 @@ public class RecurringTaskServiceTest {
     @Test
     public void findByIdWheNotFound() {
         //mock
-        doReturn(null).when(recurringTaskRepository).findOne(10L);
+        doReturn(Optional.empty()).when(recurringTaskRepository).findById(10L);
 
         //execute
         Optional<RecurringTaskDTO> result = recurringTaskService.findById(10L);
 
         //verify and assert
-        verify(recurringTaskRepository).findOne(10L);
+        verify(recurringTaskRepository).findById(10L);
 
         assertFalse(result.isPresent());
     }

@@ -3,7 +3,7 @@ package be.stijnhooft.portal.housagotchi.schedulers;
 import be.stijnhooft.portal.housagotchi.PortalHousagotchiApplication;
 import be.stijnhooft.portal.housagotchi.dtos.RecurringTaskDTO;
 import be.stijnhooft.portal.housagotchi.mappers.EventMapper;
-import be.stijnhooft.portal.housagotchi.services.EventService;
+import be.stijnhooft.portal.housagotchi.messaging.EventPublisher;
 import be.stijnhooft.portal.housagotchi.services.RecurringTaskService;
 import be.stijnhooft.portal.model.domain.Event;
 import org.junit.Test;
@@ -16,6 +16,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.mockito.Mockito.*;
 
@@ -32,7 +34,7 @@ public class PublishOvertimeRecurringTasksTest {
     private EventMapper eventMapper;
 
     @Mock
-    private EventService eventService;
+    private EventPublisher eventPublisher;
 
 
     @Test
@@ -58,8 +60,8 @@ public class PublishOvertimeRecurringTasksTest {
         verify(recurringTaskService, times(2)).findAll();
         verify(eventMapper).map(recurringTask2);
         verify(eventMapper).map(recurringTask4);
-        verify(eventService).publishEvents(Arrays.asList(event1, event2));
-        verifyNoMoreInteractions(recurringTaskService, eventMapper, eventService);
+        verify(eventPublisher).publish(Stream.of(event1, event2).collect(Collectors.toSet()));
+        verifyNoMoreInteractions(recurringTaskService, eventMapper, eventPublisher);
     }
 
     @Test
@@ -78,6 +80,6 @@ public class PublishOvertimeRecurringTasksTest {
 
         //verify
         verify(recurringTaskService, times(2)).findAll();
-        verifyNoMoreInteractions(recurringTaskService, eventMapper, eventService);
+        verifyNoMoreInteractions(recurringTaskService, eventMapper, eventPublisher);
     }
 }

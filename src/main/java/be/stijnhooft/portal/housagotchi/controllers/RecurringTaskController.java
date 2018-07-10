@@ -3,10 +3,10 @@ package be.stijnhooft.portal.housagotchi.controllers;
 import be.stijnhooft.portal.housagotchi.dtos.ExecutionDTO;
 import be.stijnhooft.portal.housagotchi.dtos.RecurringTaskDTO;
 import be.stijnhooft.portal.housagotchi.services.RecurringTaskService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +16,7 @@ public class RecurringTaskController {
 
     private final RecurringTaskService recurringTaskService;
 
-    @Inject
+    @Autowired
     public RecurringTaskController(RecurringTaskService recurringTaskService) {
         this.recurringTaskService = recurringTaskService;
     }
