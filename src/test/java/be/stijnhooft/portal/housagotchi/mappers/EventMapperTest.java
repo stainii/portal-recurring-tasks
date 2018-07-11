@@ -1,6 +1,6 @@
 package be.stijnhooft.portal.housagotchi.mappers;
 
-import be.stijnhooft.portal.housagotchi.PortalHousagotchiApplication;
+import be.stijnhooft.portal.housagotchi.PortalHousagotchi;
 import be.stijnhooft.portal.housagotchi.dtos.RecurringTaskDTO;
 import be.stijnhooft.portal.model.domain.Event;
 import org.junit.Before;
@@ -41,7 +41,7 @@ public class EventMapperTest {
 
         Event event = eventMapper.map(recurringTaskDTO);
 
-        assertEquals(PortalHousagotchiApplication.APPLICATION_NAME, event.getSource());
+        assertEquals(PortalHousagotchi.APPLICATION_NAME, event.getSource());
         assertNotNull(event.getPublishDate());
 
         Map<String, String> data = event.getData();
@@ -59,7 +59,7 @@ public class EventMapperTest {
 
         Event event = eventMapper.map(recurringTaskDTO);
 
-        assertEquals(PortalHousagotchiApplication.APPLICATION_NAME, event.getSource());
+        assertEquals(PortalHousagotchi.APPLICATION_NAME, event.getSource());
         assertNotNull(event.getPublishDate());
 
         Map<String, String> data = event.getData();

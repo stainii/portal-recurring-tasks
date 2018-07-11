@@ -1,6 +1,6 @@
 package be.stijnhooft.portal.housagotchi.controllers;
 
-import be.stijnhooft.portal.housagotchi.PortalHousagotchiApplication;
+import be.stijnhooft.portal.housagotchi.PortalHousagotchi;
 import be.stijnhooft.portal.housagotchi.dtos.ExecutionDTO;
 import be.stijnhooft.portal.housagotchi.dtos.RecurringTaskDTO;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
@@ -32,7 +32,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PortalHousagotchiApplication.class)
+@SpringBootTest(classes = PortalHousagotchi.class)
 @ActiveProfiles("local")
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
         DirtiesContextTestExecutionListener.class,

@@ -26,16 +26,16 @@
 
         <!-- default parameters used in the application. Override these with a Maven profile -->
         <environment>dev</environment>
-
-        <!-- versions of dependencies -->
-        <java.version>1.8</java.version>
-        <maven.resources.plugin.version>3.0.2</maven.resources.plugin.version>
-        <maven.war.plugin.version>3.0.0</maven.war.plugin.version>
-        <frontend.maven.plugin.version>1.4</frontend.maven.plugin.version>
+        <eureka.server.uri>http://localhost:8761</eureka.server.uri>
         <database-host>localhost</database-host>
         <database-port>5433</database-port>
         <activemq-host>localhost</activemq-host>
         <activemq-port>61616</activemq-port>
+
+        <!-- versions of dependencies -->
+        <java.version>1.8</java.version>
+        <maven.war.plugin.version>3.0.0</maven.war.plugin.version>
+        <frontend.maven.plugin.version>1.4</frontend.maven.plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -182,7 +182,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>${maven.resources.plugin.version}</version>
+                <version>3.0.2</version>
             </plugin>
 
             <plugin>
@@ -233,8 +233,9 @@
             <properties>
                 <database-host>portal-housagotchi-db</database-host>
                 <database-port>5432</database-port>
-                <activemq-host>portal-activemq</activemq-host>
-                <activemq-port>61616</activemq-port>
+                <rabbitmq-host>portal-rabbitmq</rabbitmq-host>
+                <rabbitmq-port>5672</rabbitmq-port>
+                <eureka.server.uri>http://portal-eureka:8761</eureka.server.uri>
             </properties>
             <build>
                 <plugins>

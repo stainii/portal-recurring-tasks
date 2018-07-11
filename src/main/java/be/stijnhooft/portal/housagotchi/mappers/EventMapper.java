@@ -1,6 +1,6 @@
 package be.stijnhooft.portal.housagotchi.mappers;
 
-import be.stijnhooft.portal.housagotchi.PortalHousagotchiApplication;
+import be.stijnhooft.portal.housagotchi.PortalHousagotchi;
 import be.stijnhooft.portal.housagotchi.dtos.RecurringTaskDTO;
 import be.stijnhooft.portal.model.domain.Event;
 import lombok.NonNull;
@@ -24,6 +24,6 @@ public class EventMapper extends Mapper<RecurringTaskDTO, Event> {
         data.put("task", recurringTask.getName());
         data.put("lastExecution", recurringTask.getLastExecution().toString());
 
-        return new Event(PortalHousagotchiApplication.APPLICATION_NAME, LocalDateTime.now(), data);
+        return new Event(PortalHousagotchi.APPLICATION_NAME, LocalDateTime.now(), data);
     }
 }

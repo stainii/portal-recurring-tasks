@@ -1,6 +1,6 @@
 package be.stijnhooft.portal.housagotchi.schedulers;
 
-import be.stijnhooft.portal.housagotchi.PortalHousagotchiApplication;
+import be.stijnhooft.portal.housagotchi.PortalHousagotchi;
 import be.stijnhooft.portal.housagotchi.dtos.RecurringTaskDTO;
 import be.stijnhooft.portal.housagotchi.mappers.EventMapper;
 import be.stijnhooft.portal.housagotchi.messaging.EventPublisher;
@@ -40,8 +40,8 @@ public class PublishOvertimeRecurringTasksTest {
     @Test
     public void publishOvertimeRecurringTasks() {
         //data set
-        Event event1 = new Event(PortalHousagotchiApplication.APPLICATION_NAME, LocalDateTime.now(), new HashMap<>());
-        Event event2 = new Event(PortalHousagotchiApplication.APPLICATION_NAME, LocalDateTime.now(), new HashMap<>());
+        Event event1 = new Event(PortalHousagotchi.APPLICATION_NAME, LocalDateTime.now(), new HashMap<>());
+        Event event2 = new Event(PortalHousagotchi.APPLICATION_NAME, LocalDateTime.now(), new HashMap<>());
 
         RecurringTaskDTO recurringTask1 = new RecurringTaskDTO(1L, "1", 1, 2, LocalDate.now());
         RecurringTaskDTO recurringTask2 = new RecurringTaskDTO(2L, "2", 2, 3, LocalDate.now().minusDays(2));

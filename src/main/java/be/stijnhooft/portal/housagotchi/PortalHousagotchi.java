@@ -4,12 +4,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PortalHousagotchiApplication {
+public class PortalHousagotchi {
 
     public static final String APPLICATION_NAME = "Housagotchi";
 
     public static void main(String[] args) {
-        SpringApplication.run(PortalHousagotchiApplication.class, args);
+        SpringApplication.run(PortalHousagotchi.class, args);
     }
 
 }
