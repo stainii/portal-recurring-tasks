@@ -28,3 +28,6 @@ nbdist/
 
 # generated code
 src/main/public
+
+# downloaded by the Maven front-end plugin
+node
