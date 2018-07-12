@@ -29,8 +29,8 @@
         <eureka.server.uri>http://localhost:8761</eureka.server.uri>
         <database-host>localhost</database-host>
         <database-port>5433</database-port>
-        <activemq-host>localhost</activemq-host>
-        <activemq-port>61616</activemq-port>
+        <rabbitmq-host>localhost</rabbitmq-host>
+        <rabbitmq-port>5672</rabbitmq-port>
 
         <!-- versions of dependencies -->
         <java.version>1.8</java.version>
