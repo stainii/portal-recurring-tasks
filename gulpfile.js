@@ -57,7 +57,7 @@ gulp.task("js", ["clean"], function() {
     browserify(config.paths.mainJS)
         .bundle()
         .pipe(source("bundle.js"))
-        .pipe(gulp.dest(config.paths.dist))
+        .pipe(gulp.dest(config.paths.dist + "/js/"))
 });
 
 gulp.task("static", ["clean"], function() {
@@ -69,7 +69,7 @@ gulp.task('sass', ["clean"], function () {
     return gulp.src(config.paths.sass)
         .pipe(sass())
         .pipe(concat("bundle.css"))
-        .pipe(gulp.dest(config.paths.dist));
+        .pipe(gulp.dest(config.paths.dist + "/css/"));
 });
 
 gulp.task("default", [ "clean", "html", "js", "sass", "static" ]);
