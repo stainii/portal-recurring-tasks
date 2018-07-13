@@ -64,11 +64,11 @@ public class PublishOvertimeRecurringTasks {
 
     private boolean isTodayEqualToMinDueDate(RecurringTaskDTO task) {
         LocalDate dueDate = LocalDate.now().minusDays(task.getMinNumberOfDaysBetweenExecutions());
-        return task.getLastExecution().isEqual(dueDate);
+        return task.getLastExecution() != null && task.getLastExecution().isEqual(dueDate);
     }
 
     private boolean isTodayEqualToMaxDueDate(RecurringTaskDTO task) {
         LocalDate dueDate = LocalDate.now().minusDays(task.getMaxNumberOfDaysBetweenExecutions());
-        return task.getLastExecution().isEqual(dueDate);
+        return task.getLastExecution() != null && task.getLastExecution().isEqual(dueDate);
     }
 }

@@ -82,4 +82,27 @@ public class PublishOvertimeRecurringTasksTest {
         verify(recurringTaskService, times(2)).findAll();
         verifyNoMoreInteractions(recurringTaskService, eventMapper, eventPublisher);
     }
+
+    @Test
+    public void publishOvertimeRecurringTasksWhenThereThereAreNoExecutions() {
+        //data set
+        Event event = new Event(PortalHousagotchi.APPLICATION_NAME, LocalDateTime.now(), new HashMap<>());
+        RecurringTaskDTO recurringTask1 = new RecurringTaskDTO(1L, "1", 1, 2, null);
+        RecurringTaskDTO recurringTask2 = new RecurringTaskDTO(2L, "2", 2, 3, null);
+        RecurringTaskDTO recurringTask3 = new RecurringTaskDTO(3L, "3", 3, 4, LocalDate.now().minusDays(1));
+        RecurringTaskDTO recurringTask4 = new RecurringTaskDTO(4L, "4", 4, 5, LocalDate.now().minusDays(5));
+
+        //mock
+        doReturn(Arrays.asList(recurringTask1, recurringTask2, recurringTask3, recurringTask4)).when(recurringTaskService).findAll();
+        doReturn(event).when(eventMapper).map(recurringTask4);
+
+        //execute
+        publishOvertimeRecurringTasks.publishOvertimeRecurringTasks();
+
+        //verify
+        verify(recurringTaskService, times(2)).findAll();
+        verify(eventMapper).map(recurringTask4);
+        verify(eventPublisher).publish(Stream.of(event).collect(Collectors.toSet()));
+        verifyNoMoreInteractions(recurringTaskService, eventMapper, eventPublisher);
+    }
 }
