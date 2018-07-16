@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage("Build dependencies") {
             steps {
-                build job 'portal-model'
+                build job: 'portal-model'
             }
         }
         stage('Build') {
