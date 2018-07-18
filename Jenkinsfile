@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       image 'stainii/portal-web-app-base'
-      args '-v /root/.m2:/root/.m2'
+      args '-v /root/.m2:/root/.m2 --no-cache'
     }
 
   }
