@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'maven:3-alpine'
+      image 'jimador/docker-jdk-8-maven-node'
       args '-v /root/.m2:/root/.m2'
     }
 
@@ -9,9 +9,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        catchError {
-            sh 'mvn -B -DskipTests clean install'
-        }
+        sh 'mvn -B -DskipTests clean install'
       }
     }
     stage('Test') {
@@ -26,10 +24,5 @@ pipeline {
         sh 'mvn test'
       }
     }
-  }
-  post {
-      always {
-        sh '${WORKSPACE}/node/node -help'
-      }
   }
 }
