@@ -29,8 +29,7 @@ pipeline {
   }
   post {
       always {
-        def workspace = env.WORKSPACE
-        sh 'cd ${workspace}/node && ls -la'
+        sh 'cd ${WORKSPACE}/node && ls -la'
       }
   }
 }
