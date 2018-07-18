@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'jimador/docker-jdk-8-maven-node'
+      image 'stainii/portal-web-app-base'
       args '-v /root/.m2:/root/.m2'
     }
 
