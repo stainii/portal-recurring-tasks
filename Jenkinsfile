@@ -9,7 +9,9 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'mvn -B -DskipTests clean install'
+        catchError {
+            sh 'mvn -B -DskipTests clean install'
+        }
       }
     }
     stage('Test') {
