@@ -29,7 +29,7 @@ pipeline {
   }
   post {
       always {
-        sh 'cd ${WORKSPACE}/node && ls -la'
+        sh '${WORKSPACE}/node/node -help'
       }
   }
 }
