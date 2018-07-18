@@ -25,4 +25,9 @@ pipeline {
       }
     }
   }
+  post {
+      always {
+        sh 'cd ${workspace}/node && ls -la'
+      }
+  }
 }
