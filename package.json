@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "mocha 'src/main/react/test/**/*.test.js' --require babel-register",
-    "build": "npm update --dev && gulp"
+    "build": "npm install --dev && gulp"
   },
   "author": "Stijn Hooft",
   "license": "MIT",
