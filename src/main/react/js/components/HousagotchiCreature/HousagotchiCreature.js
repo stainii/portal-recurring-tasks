@@ -2,12 +2,13 @@ import React from "react";
 import HousagotchiBalloon from "../HousagotchiBalloon/HousagotchiBalloon";
 import {connect} from "react-redux";
 import mapStateToPropsForHousagotchiCreature from "../../mappers/StateToPropsForHousagotchiCreatureMapper";
+import "./HousagotchiCreature.scss";
 
 const HousagotchiCreature = ({urgentMessages, normalMessages, mood}) => {
 
     return (
         <div className="housagotchi-creature">
-            <img src={"/static/imgs/creature/" + mood + ".png"} />
+            <img src={"./imgs/creature/" + mood + ".png"} />
             <HousagotchiBalloon>
                 {
                     urgentMessages.map(message => {

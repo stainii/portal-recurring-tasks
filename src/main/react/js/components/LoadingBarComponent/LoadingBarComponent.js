@@ -1,6 +1,7 @@
 import NProgress from "nprogress";
 import React from "react";
 import {connect} from "react-redux";
+import "./LoadingBarComponent.scss";
 
 class LoadingBarComponent extends React.Component {
 

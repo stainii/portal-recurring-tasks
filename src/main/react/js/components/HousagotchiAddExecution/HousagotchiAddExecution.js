@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import * as executionActions from "../../actions/executionActions";
 import {bindActionCreators} from "redux";
 import toastr from "toastr";
+import "./HousagotchiAddExecution.scss";
 
 class HousagotchiAddExecution extends React.Component {
 

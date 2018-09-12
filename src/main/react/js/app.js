@@ -1,53 +1,57 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import HousagotchiCreature from "./components/HousagotchiCreature/HousagotchiCreature";
 import HousagotchiAddExecution from "./components/HousagotchiAddExecution/HousagotchiAddExecution";
-import HousagotchiManageRecurringTasks from "./components/HousagotchiManageRecurringTasks/HousagotchiManageRecurringTasks";
+import HousagotchiManageRecurringTasks
+    from "./components/HousagotchiManageRecurringTasks/HousagotchiManageRecurringTasks";
 import {Tab, TabList, TabPanel, Tabs} from 'react-tabs';
 import configureStore from "./store/configureStore";
 import {Provider} from "react-redux";
 import {findAllRecurringTasks} from "./actions/recurringTaskActions";
 import LoadingBarComponent from "./components/LoadingBarComponent/LoadingBarComponent";
+import {register} from 'web-react-components';
+
+import "./app.scss";
+
 
 class Housagotchi extends React.Component {
     render() {
         return (
-            <div className="housagotchi-component">
+            <div>
+                <link rel="stylesheet" href="./main.css" />
 
-                <LoadingBarComponent/>
+                <div className="housagotchi-component">
 
-                <HousagotchiCreature/>
+                    <LoadingBarComponent/>
 
-                <Tabs className="tabs">
-                    <TabList>
-                        <Tab>Add execution</Tab>
-                        <Tab>Manage tasks</Tab>
-                    </TabList>
-                    <TabPanel>
-                        <HousagotchiAddExecution />
-                    </TabPanel>
-                    <TabPanel>
-                        <HousagotchiManageRecurringTasks/>
-                    </TabPanel>
-                </Tabs>
+                    <HousagotchiCreature/>
 
+                    <Tabs className="tabs">
+                        <TabList>
+                            <Tab>Add execution</Tab>
+                            <Tab>Manage tasks</Tab>
+                        </TabList>
+                        <TabPanel>
+                            <HousagotchiAddExecution />
+                        </TabPanel>
+                        <TabPanel>
+                            <HousagotchiManageRecurringTasks/>
+                        </TabPanel>
+                    </Tabs>
+
+                </div>
             </div>
         );
     }
 }
 
 
-(function() {
+const h = (function() {
 
     const store = configureStore();
     store.dispatch(findAllRecurringTasks());
 
-    ReactDOM.render(
-
-        <Provider store={store}>
+    return <Provider store={store}>
             <Housagotchi />
-        </Provider>,
-
-        document.getElementById("main")
-    );
-})();
+        </Provider>;
+});
+register(h, 'app-housagotchi');

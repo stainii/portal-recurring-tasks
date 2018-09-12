@@ -4,6 +4,7 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import * as recurringTaskActions from "../../actions/recurringTaskActions";
 import toastr from "toastr";
+import "./HousagotchiManageRecurringTasks.scss";
 
 class HousagotchiManageRecurringTasks extends React.Component {
 

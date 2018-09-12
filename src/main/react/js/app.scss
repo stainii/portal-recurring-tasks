@@ -1,10 +1,13 @@
 @import "node_modules/stijnhooft-portal-front-end-library/style/app";
 @import "node_modules/toastr/build/toastr";
+@import "node_modules/bootstrap/dist/css/bootstrap.min";
+
 
 .housagotchi-component {
   display: block;
   background: $background-colour;
   padding: $default-amount-of-whitespace;
+  font-family: "Segoe UI", "Arial", sans-serif;
 
   .tabs {
     display: block;
@@ -60,10 +63,4 @@
       }
     }
   }
-}
-
-@media all and (max-width: 640px) {
-  display: block;
-  width: 100%;
-  min-width: 0;
 }

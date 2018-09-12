@@ -1,4 +1,5 @@
 import React from "react";
+import "./HousagotchiBalloon.scss";
 
 const HousagotchiBalloon = ({children}) => {
     return (
