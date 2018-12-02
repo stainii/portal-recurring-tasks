@@ -20,9 +20,6 @@ import java.util.stream.Collectors;
 @EnableScheduling
 public class PublishOvertimeRecurringTasks {
 
-    //one day in milliseconds
-    private final static long ONE_DAY = 1 * 24 * 60 * 60 * 1000;
-
     private final RecurringTaskService recurringTaskService;
     private final EventMapper eventMapper;
     private final EventPublisher eventPublisher;
@@ -34,7 +31,7 @@ public class PublishOvertimeRecurringTasks {
         this.eventPublisher = eventPublisher;
     }
 
-    @Scheduled(fixedRate = ONE_DAY, initialDelay = 10000)
+    @Scheduled(cron = "0 0 16 * * *")
     public void publishOvertimeRecurringTasks() {
         log.info("Checking if overtime recurring tasks need to be published");
 
