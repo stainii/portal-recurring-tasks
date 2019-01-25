@@ -1,5 +1,5 @@
 # portal-housagotchi
-[![Build Status](http://portal-ci.westeurope.cloudapp.azure.com/buildStatus/icon?job=portal-housagotchi/master)](http://portal-ci.westeurope.cloudapp.azure.com/job/portal-housagotchi/job/master/)
+[![Build Status](https://server.stijnhooft.be/jenkins/buildStatus/icon?job=portal-housagotchi/master)](https://server.stijnhooft.be/jenkins/job/portal-housagotchi/job/master/)
 
 A module for my personal portal, which turns my household into a Tamagotchi. Gamification of keeping the house clean, you know...
 
