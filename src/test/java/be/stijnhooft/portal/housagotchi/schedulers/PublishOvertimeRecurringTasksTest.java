@@ -2,7 +2,8 @@ package be.stijnhooft.portal.housagotchi.schedulers;
 
 import be.stijnhooft.portal.housagotchi.PortalHousagotchi;
 import be.stijnhooft.portal.housagotchi.dtos.RecurringTaskDTO;
-import be.stijnhooft.portal.housagotchi.mappers.EventMapper;
+import be.stijnhooft.portal.housagotchi.mappers.event.CancellationEventMapper;
+import be.stijnhooft.portal.housagotchi.mappers.event.ReminderEventMapper;
 import be.stijnhooft.portal.housagotchi.messaging.EventPublisher;
 import be.stijnhooft.portal.housagotchi.services.RecurringTaskService;
 import be.stijnhooft.portal.model.domain.Event;
@@ -31,17 +32,20 @@ public class PublishOvertimeRecurringTasksTest {
     private RecurringTaskService recurringTaskService;
 
     @Mock
-    private EventMapper eventMapper;
+    private ReminderEventMapper reminderEventMapper;
+
+    @Mock
+    private CancellationEventMapper cancellationEventMapper;
 
     @Mock
     private EventPublisher eventPublisher;
 
-
     @Test
     public void publishOvertimeRecurringTasks() {
         //data set
-        Event event1 = new Event(PortalHousagotchi.APPLICATION_NAME, LocalDateTime.now(), new HashMap<>());
-        Event event2 = new Event(PortalHousagotchi.APPLICATION_NAME, LocalDateTime.now(), new HashMap<>());
+        Event overtimeEvent = new Event(PortalHousagotchi.APPLICATION_NAME, "abc", LocalDateTime.now(), new HashMap<>());
+        Event seriouslyOvertimeEvent = new Event(PortalHousagotchi.APPLICATION_NAME, "def", LocalDateTime.now(), new HashMap<>());
+        Event cancellationEvent = new Event(PortalHousagotchi.APPLICATION_NAME, "def", LocalDateTime.now(), new HashMap<>());
 
         RecurringTaskDTO recurringTask1 = new RecurringTaskDTO(1L, "1", 1, 2, LocalDate.now());
         RecurringTaskDTO recurringTask2 = new RecurringTaskDTO(2L, "2", 2, 3, LocalDate.now().minusDays(2));
@@ -50,18 +54,24 @@ public class PublishOvertimeRecurringTasksTest {
 
         //mock
         doReturn(Arrays.asList(recurringTask1, recurringTask2, recurringTask3, recurringTask4)).when(recurringTaskService).findAll();
-        doReturn(event1).when(eventMapper).map(recurringTask2);
-        doReturn(event2).when(eventMapper).map(recurringTask4);
+        doReturn(overtimeEvent).when(reminderEventMapper).map(recurringTask2);
+        doReturn(seriouslyOvertimeEvent).when(reminderEventMapper).map(recurringTask4);
+        doReturn(cancellationEvent).when(cancellationEventMapper).map(recurringTask4);
 
         //execute
         publishOvertimeRecurringTasks.publishOvertimeRecurringTasks();
 
         //verify
         verify(recurringTaskService, times(2)).findAll();
-        verify(eventMapper).map(recurringTask2);
-        verify(eventMapper).map(recurringTask4);
-        verify(eventPublisher).publish(Stream.of(event1, event2).collect(Collectors.toSet()));
-        verifyNoMoreInteractions(recurringTaskService, eventMapper, eventPublisher);
+
+        verify(cancellationEventMapper).map(recurringTask4);
+        verify(eventPublisher).publish(Stream.of(cancellationEvent).collect(Collectors.toSet()));
+
+        verify(reminderEventMapper).map(recurringTask2);
+        verify(reminderEventMapper).map(recurringTask4);
+        verify(eventPublisher).publish(Stream.of(overtimeEvent, seriouslyOvertimeEvent).collect(Collectors.toSet()));
+
+        verifyNoMoreInteractions(recurringTaskService, reminderEventMapper, eventPublisher, cancellationEventMapper);
     }
 
     @Test
@@ -80,13 +90,14 @@ public class PublishOvertimeRecurringTasksTest {
 
         //verify
         verify(recurringTaskService, times(2)).findAll();
-        verifyNoMoreInteractions(recurringTaskService, eventMapper, eventPublisher);
+        verifyNoMoreInteractions(recurringTaskService, reminderEventMapper, eventPublisher, cancellationEventMapper);
     }
 
     @Test
     public void publishOvertimeRecurringTasksWhenThereThereAreNoExecutions() {
         //data set
-        Event event = new Event(PortalHousagotchi.APPLICATION_NAME, LocalDateTime.now(), new HashMap<>());
+        Event seriouslyOvertimeEvent = new Event(PortalHousagotchi.APPLICATION_NAME, "abc", LocalDateTime.now(), new HashMap<>());
+        Event cancellationEvent = new Event(PortalHousagotchi.APPLICATION_NAME, "abc", LocalDateTime.now(), new HashMap<>());
         RecurringTaskDTO recurringTask1 = new RecurringTaskDTO(1L, "1", 1, 2, null);
         RecurringTaskDTO recurringTask2 = new RecurringTaskDTO(2L, "2", 2, 3, null);
         RecurringTaskDTO recurringTask3 = new RecurringTaskDTO(3L, "3", 3, 4, LocalDate.now().minusDays(1));
@@ -94,15 +105,21 @@ public class PublishOvertimeRecurringTasksTest {
 
         //mock
         doReturn(Arrays.asList(recurringTask1, recurringTask2, recurringTask3, recurringTask4)).when(recurringTaskService).findAll();
-        doReturn(event).when(eventMapper).map(recurringTask4);
+        doReturn(seriouslyOvertimeEvent).when(reminderEventMapper).map(recurringTask4);
+        doReturn(cancellationEvent).when(cancellationEventMapper).map(recurringTask4);
 
         //execute
         publishOvertimeRecurringTasks.publishOvertimeRecurringTasks();
 
         //verify
         verify(recurringTaskService, times(2)).findAll();
-        verify(eventMapper).map(recurringTask4);
-        verify(eventPublisher).publish(Stream.of(event).collect(Collectors.toSet()));
-        verifyNoMoreInteractions(recurringTaskService, eventMapper, eventPublisher);
+
+        verify(cancellationEventMapper).map(recurringTask4);
+        verify(eventPublisher).publish(Stream.of(cancellationEvent).collect(Collectors.toSet()));
+
+        verify(reminderEventMapper).map(recurringTask4);
+        verify(eventPublisher).publish(Stream.of(seriouslyOvertimeEvent).collect(Collectors.toSet()));
+
+        verifyNoMoreInteractions(recurringTaskService, reminderEventMapper, eventPublisher, cancellationEventMapper);
     }
 }

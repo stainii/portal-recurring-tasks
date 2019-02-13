@@ -1,7 +1,8 @@
 package be.stijnhooft.portal.housagotchi.schedulers;
 
 import be.stijnhooft.portal.housagotchi.dtos.RecurringTaskDTO;
-import be.stijnhooft.portal.housagotchi.mappers.EventMapper;
+import be.stijnhooft.portal.housagotchi.mappers.event.CancellationEventMapper;
+import be.stijnhooft.portal.housagotchi.mappers.event.ReminderEventMapper;
 import be.stijnhooft.portal.housagotchi.messaging.EventPublisher;
 import be.stijnhooft.portal.housagotchi.services.RecurringTaskService;
 import be.stijnhooft.portal.model.domain.Event;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 @Slf4j
@@ -21,41 +23,63 @@ import java.util.stream.Collectors;
 public class PublishOvertimeRecurringTasks {
 
     private final RecurringTaskService recurringTaskService;
-    private final EventMapper eventMapper;
+    private final ReminderEventMapper reminderEventMapper;
+    private final CancellationEventMapper cancellationEventMapper;
     private final EventPublisher eventPublisher;
 
+
     @Autowired
-    public PublishOvertimeRecurringTasks(RecurringTaskService recurringTaskService, EventMapper eventMapper, EventPublisher eventPublisher) {
+    public PublishOvertimeRecurringTasks(RecurringTaskService recurringTaskService,
+                                         ReminderEventMapper reminderEventMapper,
+                                         CancellationEventMapper cancellationEventMapper,
+                                         EventPublisher eventPublisher) {
         this.recurringTaskService = recurringTaskService;
-        this.eventMapper = eventMapper;
+        this.reminderEventMapper = reminderEventMapper;
         this.eventPublisher = eventPublisher;
+        this.cancellationEventMapper = cancellationEventMapper;
     }
 
     @Scheduled(cron = "0 0 16 * * *")
     public void publishOvertimeRecurringTasks() {
         log.info("Checking if overtime recurring tasks need to be published");
 
-        Set<Event> events = mapRecurringTasksThatTurnOvertimeToEvents();
-        events.addAll(mapRecurringTasksThatTurnSeriouslyOvertimeToEvents());
+        Set<RecurringTaskDTO> overtimeTasks = findRecurringTasksThatTurnOvertime();
+        Set<RecurringTaskDTO> seriouslyOvertimeTasks = findRecurringTasksThatTurnSeriouslyOvertime();
 
-        if (!events.isEmpty()) {
-            eventPublisher.publish(events);
+        cancelEarlierPublishedOvertimeEventsThatNowBecomeSeriouslyOvertimeEvents(seriouslyOvertimeTasks);
+        publishAsEvents(overtimeTasks, seriouslyOvertimeTasks);
+    }
+
+    private void cancelEarlierPublishedOvertimeEventsThatNowBecomeSeriouslyOvertimeEvents(Set<RecurringTaskDTO> seriouslyOvertimeTasks) {
+        final Set<Event> cancellationEvents = seriouslyOvertimeTasks.stream()
+                .map(cancellationEventMapper::map)
+                .collect(Collectors.toSet());
+
+        if (!seriouslyOvertimeTasks.isEmpty()) {
+            eventPublisher.publish(cancellationEvents);
         }
     }
 
-    private Set<Event> mapRecurringTasksThatTurnOvertimeToEvents() {
+    private void publishAsEvents(Set<RecurringTaskDTO> overtimeEvents, Set<RecurringTaskDTO> seriouslyOvertimeEvents) {
+        Set<Event> allEvents = Stream   .concat(overtimeEvents.stream(), seriouslyOvertimeEvents.stream())
+                                        .map(reminderEventMapper::map)
+                                        .collect(Collectors.toSet());
+        if (!allEvents.isEmpty()) {
+            eventPublisher.publish(allEvents);
+        }
+    }
+
+    private Set<RecurringTaskDTO> findRecurringTasksThatTurnOvertime() {
         return recurringTaskService.findAll()
                 .stream()
                 .filter(this::isTodayEqualToMinDueDate)
-                .map(eventMapper::map)
                 .collect(Collectors.toSet());
     }
 
-    private Set<Event> mapRecurringTasksThatTurnSeriouslyOvertimeToEvents() {
+    private Set<RecurringTaskDTO> findRecurringTasksThatTurnSeriouslyOvertime() {
         return recurringTaskService.findAll()
                 .stream()
                 .filter(this::isTodayEqualToMaxDueDate)
-                .map(eventMapper::map)
                 .collect(Collectors.toSet());
     }
 
