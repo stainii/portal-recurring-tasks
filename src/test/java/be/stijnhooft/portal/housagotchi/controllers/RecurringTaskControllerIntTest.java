@@ -1,8 +1,8 @@
 package be.stijnhooft.portal.housagotchi.controllers;
 
-import be.stijnhooft.portal.housagotchi.PortalHousagotchi;
 import be.stijnhooft.portal.housagotchi.dtos.ExecutionDTO;
 import be.stijnhooft.portal.housagotchi.dtos.RecurringTaskDTO;
+import be.stijnhooft.portal.housagotchi.messaging.EventTopic;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
@@ -12,10 +12,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.MessageChannel;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -30,14 +34,17 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PortalHousagotchi.class)
+@SpringBootTest
 @ActiveProfiles("local")
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
         DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class,
-        DbUnitTestExecutionListener.class})
+        DbUnitTestExecutionListener.class,
+        MockitoTestExecutionListener.class})
 public class RecurringTaskControllerIntTest {
 
     @Rule
@@ -46,13 +53,23 @@ public class RecurringTaskControllerIntTest {
     @Inject
     private RecurringTaskController controller;
 
+    /*
+     * Mocks in an integration test?
+     * Yes, to avoid having to run an active RabbitMQ instance, which is out of scope of this integration test.
+     **/
+    @MockBean
+    private EventTopic eventTopic;
+
+    @Mock
+    private MessageChannel messageChannel;
+
     @Test
     @DatabaseSetup("/datasets/RecurringTaskControllerTest-findAll-initial.xml")
     @DatabaseTearDown("/datasets/clear.xml")
     public void findAll() {
         List<RecurringTaskDTO> expectedModules = Arrays.asList(
-                new RecurringTaskDTO(Long.valueOf(1), "Dusting", 3, 7, null),
-                new RecurringTaskDTO(Long.valueOf(2), "Watering the plants", 3, 4, LocalDate.of(2017, Month.OCTOBER, 23)));
+                new RecurringTaskDTO(1L, "Dusting", 3, 7, null),
+                new RecurringTaskDTO(2L, "Watering the plants", 3, 4, LocalDate.of(2017, Month.OCTOBER, 23)));
 
         List<RecurringTaskDTO> recurringTasks = controller.findAll();
 
@@ -63,7 +80,7 @@ public class RecurringTaskControllerIntTest {
     @DatabaseSetup("/datasets/RecurringTaskControllerTest-findAll-initial.xml")
     @DatabaseTearDown("/datasets/clear.xml")
     public void findById() {
-        RecurringTaskDTO recurringTask = new RecurringTaskDTO(Long.valueOf(2), "Watering the plants", 3, 4, LocalDate.of(2017, Month.OCTOBER, 23));
+        RecurringTaskDTO recurringTask = new RecurringTaskDTO(2L, "Watering the plants", 3, 4, LocalDate.of(2017, Month.OCTOBER, 23));
         ResponseEntity<RecurringTaskDTO> response = controller.findById(2L);
         assertEquals(recurringTask, response.getBody());
     }
@@ -134,7 +151,13 @@ public class RecurringTaskControllerIntTest {
             assertionMode = DatabaseAssertionMode.NON_STRICT)
     @DatabaseTearDown("/datasets/clear.xml")
     public void addExecutionWhenSuccess() {
+        doReturn(messageChannel).when(eventTopic).eventTopic();
+
         controller.addExecution(new ExecutionDTO(LocalDate.of(2017, Month.OCTOBER, 23)), 1L);
+
+        verify(eventTopic, times(2)).eventTopic();
+        verify(messageChannel).send(any());
+        verifyNoMoreInteractions(eventTopic, messageChannel);
     }
 
     @Test(expected = IllegalArgumentException.class)

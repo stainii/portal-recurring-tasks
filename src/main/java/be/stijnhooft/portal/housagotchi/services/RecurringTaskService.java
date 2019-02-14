@@ -5,14 +5,18 @@ import be.stijnhooft.portal.housagotchi.dtos.RecurringTaskDTO;
 import be.stijnhooft.portal.housagotchi.mappers.ExecutionMapper;
 import be.stijnhooft.portal.housagotchi.mappers.RecurringTaskDTOMapper;
 import be.stijnhooft.portal.housagotchi.mappers.RecurringTaskMapper;
+import be.stijnhooft.portal.housagotchi.mappers.event.ExecutionEventMapper;
+import be.stijnhooft.portal.housagotchi.messaging.EventPublisher;
 import be.stijnhooft.portal.housagotchi.model.Execution;
 import be.stijnhooft.portal.housagotchi.model.RecurringTask;
 import be.stijnhooft.portal.housagotchi.repositories.RecurringTaskRepository;
+import be.stijnhooft.portal.model.domain.Event;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,14 +26,23 @@ public class RecurringTaskService {
     private final RecurringTaskRepository recurringTaskRepository;
     private final RecurringTaskDTOMapper recurringTaskDTOMapper;
     private final RecurringTaskMapper recurringTaskMapper;
+    private final ExecutionEventMapper executionEventMapper;
     private final ExecutionMapper executionMapper;
+    private final EventPublisher eventPublisher;
 
     @Autowired
-    public RecurringTaskService(RecurringTaskRepository recurringTaskRepository, RecurringTaskDTOMapper recurringTaskDTOMapper, RecurringTaskMapper recurringTaskMapper, ExecutionMapper executionMapper) {
+    public RecurringTaskService(RecurringTaskRepository recurringTaskRepository,
+                                RecurringTaskDTOMapper recurringTaskDTOMapper,
+                                ExecutionEventMapper executionEventMapper,
+                                RecurringTaskMapper recurringTaskMapper,
+                                ExecutionMapper executionMapper,
+                                EventPublisher eventPublisher) {
         this.recurringTaskRepository = recurringTaskRepository;
         this.recurringTaskDTOMapper = recurringTaskDTOMapper;
         this.recurringTaskMapper = recurringTaskMapper;
         this.executionMapper = executionMapper;
+        this.executionEventMapper = executionEventMapper;
+        this.eventPublisher = eventPublisher;
     }
 
     public List<RecurringTaskDTO> findAll() {
@@ -77,8 +90,15 @@ public class RecurringTaskService {
             Execution execution = executionMapper.map(executionDTO);
             recurringTask.addExecution(execution);
 
-            return recurringTaskDTOMapper.map(recurringTask);
+            RecurringTaskDTO result = recurringTaskDTOMapper.map(recurringTask);
+            publishExecutionEvent(result);
+            return result;
         }
 
+    }
+
+    private void publishExecutionEvent(RecurringTaskDTO result) {
+        Event executionEvent = executionEventMapper.map(result);
+        eventPublisher.publish(Collections.singleton(executionEvent));
     }
 }
