@@ -49,6 +49,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+        <java.version>11</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
         <!-- default parameters used in the application. Override these with a Maven profile -->
         <environment>dev</environment>
         <eureka.server.uri>http://localhost:8761</eureka.server.uri>
@@ -57,9 +61,6 @@
         <rabbitmq-host>localhost</rabbitmq-host>
         <rabbitmq-port>5672</rabbitmq-port>
 
-        <!-- versions of dependencies -->
-        <java.version>11</java.version>
-        <maven.war.plugin.version>3.0.0</maven.war.plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -229,14 +230,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.0.2</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
