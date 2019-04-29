@@ -257,6 +257,7 @@
         <profile>
             <id>production</id>
             <properties>
+                <environment>production</environment>
                 <database-host>portal-housagotchi-db</database-host>
                 <database-port>5432</database-port>
                 <rabbitmq-host>portal-rabbitmq</rabbitmq-host>
