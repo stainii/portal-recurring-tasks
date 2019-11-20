@@ -55,7 +55,6 @@
 
         <!-- default parameters used in the application. Override these with a Maven profile -->
         <environment>dev</environment>
-        <eureka.server.uri>http://localhost:8761</eureka.server.uri>
         <database-host>localhost</database-host>
         <database-port>5433</database-port>
         <rabbitmq-host>localhost</rabbitmq-host>
@@ -262,7 +261,6 @@
                 <database-port>5432</database-port>
                 <rabbitmq-host>portal-rabbitmq</rabbitmq-host>
                 <rabbitmq-port>5672</rabbitmq-port>
-                <eureka.server.uri>http://portal-eureka:8761</eureka.server.uri>
             </properties>
             <build>
                 <plugins>
