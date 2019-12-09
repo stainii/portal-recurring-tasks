@@ -9,6 +9,7 @@ import be.stijnhooft.portal.housagotchi.services.RecurringTaskService;
 import be.stijnhooft.portal.model.domain.Event;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -16,10 +17,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -93,6 +96,7 @@ public class PublishOvertimeRecurringTasksTest {
         verifyNoMoreInteractions(recurringTaskService, reminderEventMapper, eventPublisher, cancellationEventMapper);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void publishOvertimeRecurringTasksWhenThereThereAreNoExecutions() {
         //data set
@@ -112,14 +116,18 @@ public class PublishOvertimeRecurringTasksTest {
         publishOvertimeRecurringTasks.publishOvertimeRecurringTasks();
 
         //verify
+        ArgumentCaptor<Collection<Event>> eventPublisherArgumentCaptor = ArgumentCaptor.forClass(Collection.class);
+
         verify(recurringTaskService, times(2)).findAll();
 
         verify(cancellationEventMapper).map(recurringTask4);
-        verify(eventPublisher).publish(Stream.of(cancellationEvent).collect(Collectors.toSet()));
-
         verify(reminderEventMapper).map(recurringTask4);
-        verify(eventPublisher).publish(Stream.of(seriouslyOvertimeEvent).collect(Collectors.toSet()));
+        verify(eventPublisher, times(2)).publish(eventPublisherArgumentCaptor.capture());
 
         verifyNoMoreInteractions(recurringTaskService, reminderEventMapper, eventPublisher, cancellationEventMapper);
+
+        assertEquals(2, eventPublisherArgumentCaptor.getAllValues().size());
+        assertEquals(Stream.of(cancellationEvent).collect(Collectors.toSet()), eventPublisherArgumentCaptor.getAllValues().get(0));
+        assertEquals(Stream.of(seriouslyOvertimeEvent).collect(Collectors.toSet()), eventPublisherArgumentCaptor.getAllValues().get(1));
     }
 }
