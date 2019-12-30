@@ -55,7 +55,7 @@ public class PublishOvertimeRecurringTasks {
                 .map(cancellationEventMapper::map)
                 .collect(Collectors.toSet());
 
-        if (!seriouslyOvertimeTasks.isEmpty()) {
+        if (!cancellationEvents.isEmpty()) {
             eventPublisher.publish(cancellationEvents);
         }
     }
