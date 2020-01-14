@@ -3,13 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>be.stijnhooft</groupId>
-    <artifactId>portal-housagotchi</artifactId>
+    <artifactId>portal-recurring-tasks</artifactId>
     <version>2.0.4-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>portal-housagotchi</name>
-    <description>A module for my personal portal, which turns my household into a Tamagotchi. Gamification of keeping
-        the house clean, you know...
+    <name>portal-recurring-tasks</name>
+    <description>A generic module which allows you to manage recurring tasks.
+	Can be deployed multiple times, for each specific purpose: a deployment to manage household tasks, a deployment to keep an eye on my sportivity, ...
+	When builden a different front-end for each deployment, each deployment looks like a separate app.
     </description>
     <url>http://portal.stijnhooft.be/Housagotchi</url>
     <licenses>
@@ -25,9 +26,9 @@
         </developer>
     </developers>
     <scm>
-        <connection>scm:git:git://github.com/stainii/portal-housagotchi.git</connection>
-        <developerConnection>scm:git:ssh://github.com:stainii/portal-housagotchi.git</developerConnection>
-        <url>http://github.com/stainii/portal-housagotchi/tree/master</url>
+        <connection>scm:git:git://github.com/stainii/portal-recurring-tasks.git</connection>
+        <developerConnection>scm:git:ssh://github.com:stainii/portal-recurring-tasks.git</developerConnection>
+        <url>http://github.com/stainii/portal-recurring-tasks/tree/master</url>
     </scm>
     <issueManagement>
         <system>Trello</system>
@@ -55,11 +56,6 @@
 
         <!-- default parameters used in the application. Override these with a Maven profile -->
         <environment>dev</environment>
-        <database-host>localhost</database-host>
-        <database-port>5433</database-port>
-        <rabbitmq-host>localhost</rabbitmq-host>
-        <rabbitmq-port>5672</rabbitmq-port>
-
     </properties>
 
     <dependencyManagement>
@@ -257,10 +253,6 @@
             <id>production</id>
             <properties>
                 <environment>production</environment>
-                <database-host>portal-housagotchi-db</database-host>
-                <database-port>5432</database-port>
-                <rabbitmq-host>portal-rabbitmq</rabbitmq-host>
-                <rabbitmq-port>5672</rabbitmq-port>
             </properties>
             <build>
                 <plugins>

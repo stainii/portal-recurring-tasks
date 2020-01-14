@@ -1,32 +1,68 @@
-# portal-housagotchi
-[![Build Status](https://server.stijnhooft.be/jenkins/buildStatus/icon?job=portal-housagotchi/master)](https://server.stijnhooft.be/jenkins/job/portal-housagotchi/job/master/)
+# portal-recurring-tasks
+[![Build Status](https://server.stijnhooft.be/jenkins/buildStatus/icon?job=portal-recurring-tasks/master)](https://server.stijnhooft.be/jenkins/job/portal-recurring-tasks/job/master/)
 
-A module for my personal portal, which turns my household into a Tamagotchi. Gamification of keeping the house clean, you know...
+A generic module which allows you to manage recurring tasks.
+
+Can be deployed multiple times, for each specific purpose: a deployment to manage household tasks, a deployment to keep an eye on my sportivity, ...
+
+If you build a different front-end for each deployment, each deployment looks like a separate app. Like:
+
+* Housagotchi: a module for my personal portal, which turns my household into a Tamagotchi. Gamification of keeping the house clean, you know...
+* Health: warns you if you aren't behaving like a sporty-spice
+* Social: reminds you to keep in touch with friends and collegues
+* ...
+
+## How to deploy this generic module as a specific module
+### Running directly in the IDE / as a jar
+You'll need to override several (Spring) properties:
+
+| Name | Example value | Description | Required? |
+| ---- | ------------- | ----------- | -------- |
+| deployment-name | Housagotchi | Name you want to give to the deployment of this application | required
+| server.port | 2002 | Port which this application can run on | required 
+| spring.datasource.url | jdbc:postgresql://localhost:5433/portal-housagotchi | JDBC url to connect to the database | required
+| spring.datasource.username | my-username | Username to log in to the database | required
+| spring.datasource.password | secret | Password to log in to the database | required
+| spring.rabbitmq.host | rabbitmq | Host where RabbitMQ is located | required
+| spring.rabbitmq.port | 5672 | Port of RabbitMQ| required
+| spring.rabbitmq.username | my-username | Username to log in to RabbitMQ | required
+| spring.rabbitmq.password | secret | Password to log in to RabbitMQ | required
+
+### Running with Docker
+When running with Docker, this is done by providing the required Docker environment variables.
+
+| Name | Example value | Description | Required? |
+| ---- | ------------- | ----------- | -------- |
+| DEPLOYMENT_NAME | Housagotchi | Name you want to give to the deployment of this application | required 
+| POSTGRES_URL | jdbc:postgresql://localhost:5433/portal-housagotchi | JDBC url to connect to the database | required
+| POSTGRES_USERNAME | my-username | Username to log in to the database | required
+| POSTGRES_PASSWORD | secret | Password to log in to the database | required
+| RABBITMQ_HOST | rabbitmq | Host where RabbitMQ is located | required
+| RABBITMQ_PORT | 5672 | Port of RabbitMQ| required
+| RABBITMQ_USERNAME | my-username | Username to log in to RabbitMQ | required
+| RABBITMQ_PASSWORD | secret | Password to log in to RabbitMQ | required
+| EUREKA_SERVICE_URL | http://portal-eureka:8761/eureka | Url of Eureka | required
+| JAVA_OPTS_RECURRING_TASKS | -Xmx400m -Xms400m | Java opts you want to pass to the JVM | optional
+
 
 ## Published events
 This application publishes the following events:
 
 * **Reminder**: a reminder that a task is due
-    * **flowId**: Housagotchi-[task id], for example Housagotchi-1001
+    * **flowId**: [deployment-name]-[task id], for example Housagotchi-1001
     * **data**
         * **type**: *"reminder"*
         * **urgent**: true/false
         * **task**: string
         * **lastExecution**: local date time
 * **Execution**: the task has been executed
-    * **flowId**: Housagotchi-[task id], for example Housagotchi-1001
+    * **flowId**: [deployment-name]-[task id], for example Housagotchi-1001
     * **data**
         * **type**: *"execution"*
 * **Cancellation**: the task has been cancelled
-    * **flowId**: Housagotchi-[task id], for example Housagotchi-1001
+    * **flowId**: [deployment-name]-[task id], for example Housagotchi-1001
         * **data**
             * **type**: *"cancellation"*
-
-## Environment variables
-| Name | Example value | Description | Required? |
-| ---- | ------------- | ----------- | -------- |
-| POSTGRES_PASSWORD | secret | Password to log in to the database | required
-| JAVA_OPTS_HOUSAGOTCHI | -Xmx400m -Xms400m | Java opts you want to pass to the JVM | optional
 
 ### Release
 #### How to release
