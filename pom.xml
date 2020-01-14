@@ -4,13 +4,13 @@
 
     <groupId>be.stijnhooft</groupId>
     <artifactId>portal-recurring-tasks</artifactId>
-    <version>2.0.4-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>portal-recurring-tasks</name>
     <description>A generic module which allows you to manage recurring tasks.
 	Can be deployed multiple times, for each specific purpose: a deployment to manage household tasks, a deployment to keep an eye on my sportivity, ...
-	When builden a different front-end for each deployment, each deployment looks like a separate app.
+	When building a different front-end for each deployment, each deployment looks like a separate app.
     </description>
     <url>http://portal.stijnhooft.be/Housagotchi</url>
     <licenses>
