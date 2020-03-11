@@ -35,6 +35,8 @@ public class ReminderEventMapperTest {
     @Test
     public void mapReminderWhenNotUrgentTask() {
         LocalDate twoDaysAgo = LocalDate.now().minusDays(2);
+        LocalDate today = LocalDate.now();
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
         RecurringTaskDto recurringTaskDTO = new RecurringTaskDto(
                 1L, "Do the dishes", 2,
                 3, twoDaysAgo);
@@ -49,12 +51,17 @@ public class ReminderEventMapperTest {
         assertEquals(Boolean.FALSE.toString(), data.get("urgent"));
         assertEquals("Do the dishes", data.get("task"));
         assertEquals(twoDaysAgo.toString(), data.get("lastExecution"));
+        assertEquals(today.toString(), data.get("minDueDate"));
+        assertEquals(tomorrow.toString(), data.get("maxDueDate"));
         assertEquals("reminder", data.get("type"));
     }
 
     @Test
     public void mapReminderWhenUrgentTask() {
         LocalDate threeDaysAgo = LocalDate.now().minusDays(3);
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        LocalDate today = LocalDate.now();
+
         RecurringTaskDto recurringTaskDTO = new RecurringTaskDto(
                 1L, "Do the dishes", 2,
                 3, threeDaysAgo);
@@ -69,6 +76,8 @@ public class ReminderEventMapperTest {
         assertEquals(Boolean.TRUE.toString(), data.get("urgent"));
         assertEquals("Do the dishes", data.get("task"));
         assertEquals(threeDaysAgo.toString(), data.get("lastExecution"));
+        assertEquals(yesterday.toString(), data.get("minDueDate"));
+        assertEquals(today.toString(), data.get("maxDueDate"));
         assertEquals("reminder", data.get("type"));
     }
 }

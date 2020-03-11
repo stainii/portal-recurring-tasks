@@ -24,13 +24,15 @@ public class ReminderEventMapper extends Mapper<RecurringTaskDto, Event> {
     @Override
     public Event map(@NonNull RecurringTaskDto recurringTask) {
         LocalDate lastExecution = recurringTask.getLastExecution();
-        LocalDate lastAcceptableDayOfExecution = LocalDate.now().minusDays(recurringTask.getMaxNumberOfDaysBetweenExecutions());
+        LocalDate lastAcceptableDayOfExecution = lastExecution.plusDays(recurringTask.getMaxNumberOfDaysBetweenExecutions());
 
         Map<String, String> data = new HashMap<>();
         data.put("type", "reminder");
-        data.put("urgent", Boolean.toString(lastExecution.isEqual(lastAcceptableDayOfExecution)));
+        data.put("urgent", Boolean.toString(LocalDate.now().isEqual(lastAcceptableDayOfExecution)));
         data.put("task", recurringTask.getName());
         data.put("lastExecution", recurringTask.getLastExecution().toString());
+        data.put("minDueDate", lastExecution.plusDays(recurringTask.getMinNumberOfDaysBetweenExecutions()).toString());
+        data.put("maxDueDate", lastAcceptableDayOfExecution.toString());
 
         return new Event(deploymentName, deploymentName + "-" + recurringTask.getId(), LocalDateTime.now(), data);
     }

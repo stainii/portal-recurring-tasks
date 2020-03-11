@@ -55,6 +55,8 @@ This application publishes the following events:
         * **urgent**: true/false
         * **task**: string
         * **lastExecution**: local date time
+        * **minDueDate**: expected due date
+        * **maxDueDate**: maximum due date, if this due date is not met things get really nasty
 * **Execution**: the task has been executed
     * **flowId**: [deployment-name]-[task id], for example Housagotchi-1001
     * **data**
