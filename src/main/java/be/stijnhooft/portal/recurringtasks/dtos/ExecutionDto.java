@@ -8,10 +8,14 @@ import java.time.LocalDate;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExecutionDTO {
+public class ExecutionDto {
 
     @Getter
     @NonNull
     private LocalDate date;
+
+    @Getter
+    @NonNull
+    private Source source;
 
 }

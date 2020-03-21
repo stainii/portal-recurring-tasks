@@ -50,6 +50,7 @@ This application publishes the following events:
 
 * **Reminder**: a reminder that a task is due
     * **flowId**: [deployment-name]-[task id], for example Housagotchi-1001
+    * **flowAction**: START
     * **data**
         * **type**: *"reminder"*
         * **urgent**: true/false
@@ -59,12 +60,16 @@ This application publishes the following events:
         * **maxDueDate**: maximum due date, if this due date is not met things get really nasty
 * **Execution**: the task has been executed
     * **flowId**: [deployment-name]-[task id], for example Housagotchi-1001
+    * **flowAction**: END
     * **data**
         * **type**: *"execution"*
 * **Cancellation**: the task has been cancelled
     * **flowId**: [deployment-name]-[task id], for example Housagotchi-1001
-        * **data**
-            * **type**: *"cancellation"*
+    * **flowAction**: END
+    * **data**
+        * **type**: *"cancellation"*
+
+When a task becomes **urgent**, a **cancel event** is sent, **followed by a new reminder event**.
 
 ### Release
 #### How to release

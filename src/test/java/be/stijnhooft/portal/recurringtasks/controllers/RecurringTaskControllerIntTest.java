@@ -1,7 +1,8 @@
 package be.stijnhooft.portal.recurringtasks.controllers;
 
-import be.stijnhooft.portal.recurringtasks.dtos.ExecutionDTO;
+import be.stijnhooft.portal.recurringtasks.dtos.ExecutionDto;
 import be.stijnhooft.portal.recurringtasks.dtos.RecurringTaskDto;
+import be.stijnhooft.portal.recurringtasks.dtos.Source;
 import be.stijnhooft.portal.recurringtasks.messaging.EventTopic;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
@@ -12,14 +13,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener;
+import org.springframework.cloud.stream.test.binder.MessageCollector;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.Message;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -27,15 +28,15 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import javax.inject.Inject;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -47,21 +48,17 @@ import static org.mockito.Mockito.*;
         MockitoTestExecutionListener.class})
 public class RecurringTaskControllerIntTest {
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
-
-    @Inject
-    private RecurringTaskController controller;
-
-    /*
-     * Mocks in an integration test?
-     * Yes, to avoid having to run an active RabbitMQ instance, which is out of scope of this integration test.
-     **/
-    @MockBean
+    @Autowired
     private EventTopic eventTopic;
 
-    @Mock
-    private MessageChannel messageChannel;
+    @Autowired
+    private MessageCollector collector;
+
+    @Autowired
+    private RecurringTaskController controller;
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     @DatabaseSetup("/datasets/RecurringTaskControllerTest-findAll-initial.xml")
@@ -151,19 +148,16 @@ public class RecurringTaskControllerIntTest {
             assertionMode = DatabaseAssertionMode.NON_STRICT)
     @DatabaseTearDown("/datasets/clear.xml")
     public void addExecutionWhenSuccess() {
-        doReturn(messageChannel).when(eventTopic).eventTopic();
+        controller.addExecution(new ExecutionDto(LocalDate.of(2017, Month.OCTOBER, 23), Source.USER), 1L);
 
-        controller.addExecution(new ExecutionDTO(LocalDate.of(2017, Month.OCTOBER, 23)), 1L);
-
-        verify(eventTopic, times(2)).eventTopic();
-        verify(messageChannel).send(any());
-        verifyNoMoreInteractions(eventTopic, messageChannel);
+        BlockingQueue<Message<?>> messages = collector.forChannel(eventTopic.writeToEventTopic());
+        assertThat(messages, hasSize(1));
     }
 
     @Test(expected = IllegalArgumentException.class)
     @DatabaseSetup("/datasets/RecurringTaskControllerTest-addExecution-initial.xml")
     @DatabaseTearDown("/datasets/clear.xml")
     public void addExecutionWhenRecurrentTaskDoesNotExist() {
-        controller.addExecution(new ExecutionDTO(LocalDate.now()), 100L);
+        controller.addExecution(new ExecutionDto(LocalDate.now(), Source.USER), 100L);
     }
 }

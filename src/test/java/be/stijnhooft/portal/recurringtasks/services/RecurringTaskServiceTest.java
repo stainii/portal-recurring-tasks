@@ -1,8 +1,10 @@
 package be.stijnhooft.portal.recurringtasks.services;
 
 import be.stijnhooft.portal.model.domain.Event;
-import be.stijnhooft.portal.recurringtasks.dtos.ExecutionDTO;
+import be.stijnhooft.portal.model.domain.FlowAction;
+import be.stijnhooft.portal.recurringtasks.dtos.ExecutionDto;
 import be.stijnhooft.portal.recurringtasks.dtos.RecurringTaskDto;
+import be.stijnhooft.portal.recurringtasks.dtos.Source;
 import be.stijnhooft.portal.recurringtasks.mappers.ExecutionMapper;
 import be.stijnhooft.portal.recurringtasks.mappers.RecurringTaskDtoMapper;
 import be.stijnhooft.portal.recurringtasks.mappers.RecurringTaskMapper;
@@ -34,7 +36,7 @@ public class RecurringTaskServiceTest {
     private RecurringTaskRepository recurringTaskRepository;
 
     @Mock
-    private RecurringTaskDtoMapper recurringTaskDTOMapper;
+    private RecurringTaskDtoMapper recurringTaskDtoMapper;
 
     @Mock
     private RecurringTaskMapper recurringTaskMapper;
@@ -56,15 +58,15 @@ public class RecurringTaskServiceTest {
 
         //mocking
         doReturn(recurringTasks).when(recurringTaskRepository).findAll();
-        doReturn(recurringTaskDtos).when(recurringTaskDTOMapper).mapAsList(recurringTasks);
+        doReturn(recurringTaskDtos).when(recurringTaskDtoMapper).mapAsList(recurringTasks);
 
         //execute
         List<RecurringTaskDto> result = recurringTaskService.findAll();
 
         //verify and assert
         verify(recurringTaskRepository).findAll();
-        verify(recurringTaskDTOMapper).mapAsList(recurringTasks);
-        verifyNoMoreInteractions(recurringTaskDTOMapper, recurringTaskMapper, recurringTaskRepository, executionEventMapper, executionMapper, eventPublisher);
+        verify(recurringTaskDtoMapper).mapAsList(recurringTasks);
+        verifyNoMoreInteractions(recurringTaskDtoMapper, recurringTaskMapper, recurringTaskRepository, executionEventMapper, executionMapper, eventPublisher);
 
         assertSame(recurringTaskDtos, result);
     }
@@ -85,7 +87,7 @@ public class RecurringTaskServiceTest {
         //mock
         doReturn(recurringTask).when(recurringTaskMapper).map(recurringTaskDTO);
         doReturn(savedRecurringTask).when(recurringTaskRepository).saveAndFlush(recurringTask);
-        doReturn(savedRecurringTaskDto).when(recurringTaskDTOMapper).map(savedRecurringTask);
+        doReturn(savedRecurringTaskDto).when(recurringTaskDtoMapper).map(savedRecurringTask);
 
         //execute
         RecurringTaskDto result = recurringTaskService.create(recurringTaskDTO);
@@ -93,8 +95,8 @@ public class RecurringTaskServiceTest {
         //verify and assert
         verify(recurringTaskMapper).map(recurringTaskDTO);
         verify(recurringTaskRepository).saveAndFlush(recurringTask);
-        verify(recurringTaskDTOMapper).map(savedRecurringTask);
-        verifyNoMoreInteractions(recurringTaskDTOMapper, recurringTaskMapper, recurringTaskRepository, executionEventMapper, executionMapper, eventPublisher);
+        verify(recurringTaskDtoMapper).map(savedRecurringTask);
+        verifyNoMoreInteractions(recurringTaskDtoMapper, recurringTaskMapper, recurringTaskRepository, executionEventMapper, executionMapper, eventPublisher);
 
         assertSame(savedRecurringTaskDto, result);
     }
@@ -113,15 +115,15 @@ public class RecurringTaskServiceTest {
 
         //mock
         doReturn(Optional.of(recurringTask)).when(recurringTaskRepository).findById(10L);
-        doReturn(newRecurringTaskDto).when(recurringTaskDTOMapper).map(recurringTask);
+        doReturn(newRecurringTaskDto).when(recurringTaskDtoMapper).map(recurringTask);
 
         //execute
         RecurringTaskDto result = recurringTaskService.update(recurringTaskDTO);
 
         //verify and assert
         verify(recurringTaskRepository).findById(10L);
-        verify(recurringTaskDTOMapper).map(recurringTask);
-        verifyNoMoreInteractions(recurringTaskDTOMapper, recurringTaskMapper, recurringTaskRepository, executionEventMapper, executionMapper, eventPublisher);
+        verify(recurringTaskDtoMapper).map(recurringTask);
+        verifyNoMoreInteractions(recurringTaskDtoMapper, recurringTaskMapper, recurringTaskRepository, executionEventMapper, executionMapper, eventPublisher);
 
         assertSame(newRecurringTaskDto, result);
     }
@@ -138,18 +140,18 @@ public class RecurringTaskServiceTest {
     }
 
     @Test
-    public void addExecution() {
+    public void addExecutionWhenSourceIsUser() {
         //data set
-        ExecutionDTO executionDTO = new ExecutionDTO(LocalDate.now());
+        ExecutionDto executionDTO = new ExecutionDto(LocalDate.now(), Source.USER);
         Execution execution = new Execution();
         RecurringTask recurringTask = new RecurringTask();
         RecurringTaskDto recurringTaskDTO = new RecurringTaskDto(10L, "test", 1, 2, null);
-        Event executionEvent = new Event("Housagotchi", "Housagotchi-1", LocalDateTime.now(), new HashMap<>());
+        Event executionEvent = new Event("Housagotchi", "Housagotchi-1", FlowAction.END, LocalDateTime.now(), new HashMap<>());
 
         //mock
         doReturn(execution).when(executionMapper).map(executionDTO);
         doReturn(Optional.of(recurringTask)).when(recurringTaskRepository).findById(10L);
-        doReturn(recurringTaskDTO).when(recurringTaskDTOMapper).map(recurringTask);
+        doReturn(recurringTaskDTO).when(recurringTaskDtoMapper).map(recurringTask);
         doReturn(executionEvent).when(executionEventMapper).map(recurringTaskDTO);
 
         //execute
@@ -158,12 +160,40 @@ public class RecurringTaskServiceTest {
         //verify and assert
         verify(executionMapper).map(executionDTO);
         verify(recurringTaskRepository).findById(10L);
-        verify(recurringTaskDTOMapper).map(recurringTask);
+        verify(recurringTaskDtoMapper).map(recurringTask);
         verify(executionEventMapper).map(recurringTaskDTO);
         verify(eventPublisher).publish(Collections.singleton(executionEvent));
-        verifyNoMoreInteractions(recurringTaskDTOMapper, recurringTaskMapper, recurringTaskRepository, executionEventMapper, executionMapper, eventPublisher);
+        verifyNoMoreInteractions(recurringTaskDtoMapper, recurringTaskMapper, recurringTaskRepository, executionEventMapper, executionMapper, eventPublisher);
 
         assertSame(recurringTaskDTO, result);
+        assertEquals(1, recurringTask.getExecutions().size());
+        assertSame(execution, recurringTask.getExecutions().get(0));
+    }
+
+    @Test
+    public void addExecutionWhenSourceIsEvent() {
+        //data set
+        ExecutionDto executionDto = new ExecutionDto(LocalDate.now(), Source.EVENT);
+        Execution execution = new Execution();
+        RecurringTask recurringTask = new RecurringTask();
+        RecurringTaskDto recurringTaskDto = new RecurringTaskDto(10L, "test", 1, 2, null);
+        Event executionEvent = new Event("Housagotchi", "Housagotchi-1", FlowAction.END, LocalDateTime.now(), new HashMap<>());
+
+        //mock
+        doReturn(execution).when(executionMapper).map(executionDto);
+        doReturn(Optional.of(recurringTask)).when(recurringTaskRepository).findById(10L);
+        doReturn(recurringTaskDto).when(recurringTaskDtoMapper).map(recurringTask);
+
+        //execute
+        RecurringTaskDto result = recurringTaskService.addExecution(executionDto, 10L);
+
+        //verify and assert
+        verify(executionMapper).map(executionDto);
+        verify(recurringTaskRepository).findById(10L);
+        verify(recurringTaskDtoMapper).map(recurringTask);
+        verifyNoMoreInteractions(recurringTaskDtoMapper, recurringTaskMapper, recurringTaskRepository, executionEventMapper, executionMapper, eventPublisher);
+
+        assertSame(recurringTaskDto, result);
         assertEquals(1, recurringTask.getExecutions().size());
         assertSame(execution, recurringTask.getExecutions().get(0));
     }
@@ -176,15 +206,15 @@ public class RecurringTaskServiceTest {
 
         //mock
         doReturn(Optional.of(recurringTask)).when(recurringTaskRepository).findById(10L);
-        doReturn(recurringTaskDTO).when(recurringTaskDTOMapper).map(recurringTask);
+        doReturn(recurringTaskDTO).when(recurringTaskDtoMapper).map(recurringTask);
 
         //execute
         Optional<RecurringTaskDto> result = recurringTaskService.findById(10L);
 
         //verify and assert
         verify(recurringTaskRepository).findById(10L);
-        verify(recurringTaskDTOMapper).map(recurringTask);
-        verifyNoMoreInteractions(recurringTaskDTOMapper, recurringTaskMapper, recurringTaskRepository, executionEventMapper, executionMapper, eventPublisher);
+        verify(recurringTaskDtoMapper).map(recurringTask);
+        verifyNoMoreInteractions(recurringTaskDtoMapper, recurringTaskMapper, recurringTaskRepository, executionEventMapper, executionMapper, eventPublisher);
 
         assertSame(recurringTaskDTO, result.get());
     }
@@ -199,7 +229,7 @@ public class RecurringTaskServiceTest {
 
         //verify and assert
         verify(recurringTaskRepository).findById(10L);
-        verifyNoMoreInteractions(recurringTaskDTOMapper, recurringTaskMapper, recurringTaskRepository, executionEventMapper, executionMapper, eventPublisher);
+        verifyNoMoreInteractions(recurringTaskDtoMapper, recurringTaskMapper, recurringTaskRepository, executionEventMapper, executionMapper, eventPublisher);
 
         assertFalse(result.isPresent());
     }

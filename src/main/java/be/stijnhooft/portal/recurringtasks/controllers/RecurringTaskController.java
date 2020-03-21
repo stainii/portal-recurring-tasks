@@ -1,6 +1,6 @@
 package be.stijnhooft.portal.recurringtasks.controllers;
 
-import be.stijnhooft.portal.recurringtasks.dtos.ExecutionDTO;
+import be.stijnhooft.portal.recurringtasks.dtos.ExecutionDto;
 import be.stijnhooft.portal.recurringtasks.dtos.RecurringTaskDto;
 import be.stijnhooft.portal.recurringtasks.services.RecurringTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +55,7 @@ public class RecurringTaskController {
     }
 
     @RequestMapping(value = "/{id}/execution/", method = RequestMethod.POST)
-    public RecurringTaskDto addExecution(@RequestBody ExecutionDTO execution, @PathVariable("id") Long recurringTaskId) {
+    public RecurringTaskDto addExecution(@RequestBody ExecutionDto execution, @PathVariable("id") Long recurringTaskId) {
         return recurringTaskService.addExecution(execution, recurringTaskId);
     }
 }
