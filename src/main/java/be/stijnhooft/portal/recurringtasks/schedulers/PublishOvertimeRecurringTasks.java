@@ -79,8 +79,13 @@ public class PublishOvertimeRecurringTasks {
     private Set<RecurringTaskDto> findRecurringTasksThatTurnSeriouslyOvertime() {
         return recurringTaskService.findAll()
                 .stream()
+                .filter(this::isMaxNumberOfDaysGreaterThanMinNumberOfDaysBetweenExecutions) // tasks with min = max cannot turn seriously overtime
                 .filter(this::isTodayEqualToMaxDueDate)
                 .collect(Collectors.toSet());
+    }
+
+    private boolean isMaxNumberOfDaysGreaterThanMinNumberOfDaysBetweenExecutions(RecurringTaskDto recurringTaskDto) {
+        return recurringTaskDto.getMaxNumberOfDaysBetweenExecutions() > recurringTaskDto.getMinNumberOfDaysBetweenExecutions();
     }
 
     private boolean isTodayEqualToMinDueDate(RecurringTaskDto task) {

@@ -1,6 +1,7 @@
 package be.stijnhooft.portal.recurringtasks.mappers.event;
 
 import be.stijnhooft.portal.model.domain.Event;
+import be.stijnhooft.portal.model.domain.FlowAction;
 import be.stijnhooft.portal.recurringtasks.dtos.RecurringTaskDto;
 import be.stijnhooft.portal.recurringtasks.mappers.Mapper;
 import lombok.NonNull;
@@ -24,6 +25,6 @@ public class CancellationEventMapper extends Mapper<RecurringTaskDto, Event> {
     public Event map(@NonNull RecurringTaskDto recurringTask) {
         Map<String, String> data = new HashMap<>();
         data.put("type", "cancellation");
-        return new Event(deploymentName, deploymentName + "-" + recurringTask.getId(), LocalDateTime.now(), data);
+        return new Event(deploymentName, deploymentName + "-" + recurringTask.getId(), FlowAction.END, LocalDateTime.now(), data);
     }
 }

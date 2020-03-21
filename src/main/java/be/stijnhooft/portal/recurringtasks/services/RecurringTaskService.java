@@ -1,8 +1,9 @@
 package be.stijnhooft.portal.recurringtasks.services;
 
 import be.stijnhooft.portal.model.domain.Event;
-import be.stijnhooft.portal.recurringtasks.dtos.ExecutionDTO;
+import be.stijnhooft.portal.recurringtasks.dtos.ExecutionDto;
 import be.stijnhooft.portal.recurringtasks.dtos.RecurringTaskDto;
+import be.stijnhooft.portal.recurringtasks.dtos.Source;
 import be.stijnhooft.portal.recurringtasks.mappers.ExecutionMapper;
 import be.stijnhooft.portal.recurringtasks.mappers.RecurringTaskDtoMapper;
 import be.stijnhooft.portal.recurringtasks.mappers.RecurringTaskMapper;
@@ -57,18 +58,14 @@ public class RecurringTaskService {
 
     public RecurringTaskDto create(@NonNull RecurringTaskDto recurringTaskDTO) {
         RecurringTask newRecurringTask = recurringTaskMapper.map(recurringTaskDTO);
-        RecurringTask savedNewReccuringTask = recurringTaskRepository.saveAndFlush(newRecurringTask);
-        return recurringTaskDTOMapper.map(savedNewReccuringTask);
+        RecurringTask savedNewRecurringTask = recurringTaskRepository.saveAndFlush(newRecurringTask);
+        return recurringTaskDTOMapper.map(savedNewRecurringTask);
     }
 
     public RecurringTaskDto update(@NonNull RecurringTaskDto recurringTaskDTO) {
-        Optional<RecurringTask> recurringTaskToUpdateOptional = recurringTaskRepository.findById(recurringTaskDTO.getId());
+        RecurringTask recurringTask = recurringTaskRepository.findById(recurringTaskDTO.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Cannot find recurring task with id " + recurringTaskDTO.getId()));
 
-        if (!recurringTaskToUpdateOptional.isPresent()) {
-            throw new IllegalArgumentException("Cannot find recurring task with id " + recurringTaskDTO.getId());
-        }
-
-        RecurringTask recurringTask = recurringTaskToUpdateOptional.get();
         recurringTask.update(recurringTaskDTO.getName(),
                 recurringTaskDTO.getMinNumberOfDaysBetweenExecutions(),
                 recurringTaskDTO.getMaxNumberOfDaysBetweenExecutions());
@@ -80,21 +77,18 @@ public class RecurringTaskService {
         recurringTaskRepository.deleteById(id);
     }
 
-    public RecurringTaskDto addExecution(@NonNull ExecutionDTO executionDTO, long recurringTaskId) {
-        Optional<RecurringTask> recurringTaskOptional = recurringTaskRepository.findById(recurringTaskId);
-        if (!recurringTaskOptional.isPresent()) {
-            throw new IllegalArgumentException("Cannot find recurring task with id " + recurringTaskId);
-        } else {
-            RecurringTask recurringTask = recurringTaskOptional.get();
+    public RecurringTaskDto addExecution(@NonNull ExecutionDto executionDto, long recurringTaskId) {
+        RecurringTask recurringTask = recurringTaskRepository.findById(recurringTaskId)
+                .orElseThrow(() -> new IllegalArgumentException("Cannot find recurring task with id " + recurringTaskId));
 
-            Execution execution = executionMapper.map(executionDTO);
-            recurringTask.addExecution(execution);
+        Execution execution = executionMapper.map(executionDto);
+        recurringTask.addExecution(execution);
 
-            RecurringTaskDto result = recurringTaskDTOMapper.map(recurringTask);
+        RecurringTaskDto result = recurringTaskDTOMapper.map(recurringTask);
+        if (executionDto.getSource() == Source.USER) {
             publishExecutionEvent(result);
-            return result;
         }
-
+        return result;
     }
 
     private void publishExecutionEvent(RecurringTaskDto result) {

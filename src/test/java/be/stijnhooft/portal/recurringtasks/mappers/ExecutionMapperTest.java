@@ -1,6 +1,7 @@
 package be.stijnhooft.portal.recurringtasks.mappers;
 
-import be.stijnhooft.portal.recurringtasks.dtos.ExecutionDTO;
+import be.stijnhooft.portal.recurringtasks.dtos.ExecutionDto;
+import be.stijnhooft.portal.recurringtasks.dtos.Source;
 import be.stijnhooft.portal.recurringtasks.model.Execution;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,13 +21,13 @@ public class ExecutionMapperTest {
 
     @Test(expected = NullPointerException.class)
     public void mapWhenPassingNull() {
-        mapper.map((ExecutionDTO) null);
+        mapper.map((ExecutionDto) null);
     }
 
     @Test
     public void map() {
         LocalDate date = LocalDate.now();
-        ExecutionDTO executionDTO = new ExecutionDTO(date);
+        ExecutionDto executionDTO = new ExecutionDto(date, Source.USER);
 
         Execution execution = mapper.map(executionDTO);
 

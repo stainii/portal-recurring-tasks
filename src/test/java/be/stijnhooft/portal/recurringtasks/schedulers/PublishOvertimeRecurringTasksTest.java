@@ -1,6 +1,7 @@
 package be.stijnhooft.portal.recurringtasks.schedulers;
 
 import be.stijnhooft.portal.model.domain.Event;
+import be.stijnhooft.portal.model.domain.FlowAction;
 import be.stijnhooft.portal.recurringtasks.dtos.RecurringTaskDto;
 import be.stijnhooft.portal.recurringtasks.mappers.event.CancellationEventMapper;
 import be.stijnhooft.portal.recurringtasks.mappers.event.ReminderEventMapper;
@@ -47,18 +48,22 @@ public class PublishOvertimeRecurringTasksTest {
     @Test
     public void publishOvertimeRecurringTasks() {
         //data set
-        Event overtimeEvent = new Event(DEPLOYMENT_NAME, "abc", LocalDateTime.now(), new HashMap<>());
-        Event seriouslyOvertimeEvent = new Event(DEPLOYMENT_NAME, "def", LocalDateTime.now(), new HashMap<>());
-        Event cancellationEvent = new Event(DEPLOYMENT_NAME, "def", LocalDateTime.now(), new HashMap<>());
+        Event overtimeEvent1 = new Event(DEPLOYMENT_NAME, "abc", FlowAction.START, LocalDateTime.now(), new HashMap<>());
+        Event overtimeEvent2 = new Event(DEPLOYMENT_NAME, "abc", FlowAction.START, LocalDateTime.now(), new HashMap<>());
+        Event seriouslyOvertimeEvent = new Event(DEPLOYMENT_NAME, "def", FlowAction.UPDATE, LocalDateTime.now(), new HashMap<>());
+        Event cancellationEvent = new Event(DEPLOYMENT_NAME, "def", FlowAction.END, LocalDateTime.now(), new HashMap<>());
 
         RecurringTaskDto recurringTask1 = new RecurringTaskDto(1L, "1", 1, 2, LocalDate.now());
         RecurringTaskDto recurringTask2 = new RecurringTaskDto(2L, "2", 2, 3, LocalDate.now().minusDays(2));
         RecurringTaskDto recurringTask3 = new RecurringTaskDto(3L, "3", 3, 4, LocalDate.now().minusDays(1));
         RecurringTaskDto recurringTask4 = new RecurringTaskDto(4L, "4", 4, 5, LocalDate.now().minusDays(5));
+        RecurringTaskDto recurringTask5 = new RecurringTaskDto(5L, "5", 4, 4, LocalDate.now().minusDays(4));
 
         //mock
-        doReturn(Arrays.asList(recurringTask1, recurringTask2, recurringTask3, recurringTask4)).when(recurringTaskService).findAll();
-        doReturn(overtimeEvent).when(reminderEventMapper).map(recurringTask2);
+        doReturn(Arrays.asList(recurringTask1, recurringTask2, recurringTask3, recurringTask4, recurringTask5))
+                .when(recurringTaskService).findAll();
+        doReturn(overtimeEvent1).when(reminderEventMapper).map(recurringTask2);
+        doReturn(overtimeEvent2).when(reminderEventMapper).map(recurringTask5);
         doReturn(seriouslyOvertimeEvent).when(reminderEventMapper).map(recurringTask4);
         doReturn(cancellationEvent).when(cancellationEventMapper).map(recurringTask4);
 
@@ -72,8 +77,9 @@ public class PublishOvertimeRecurringTasksTest {
         verify(eventPublisher).publish(Stream.of(cancellationEvent).collect(Collectors.toSet()));
 
         verify(reminderEventMapper).map(recurringTask2);
+        verify(reminderEventMapper).map(recurringTask5);
         verify(reminderEventMapper).map(recurringTask4);
-        verify(eventPublisher).publish(Stream.of(overtimeEvent, seriouslyOvertimeEvent).collect(Collectors.toSet()));
+        verify(eventPublisher).publish(Stream.of(overtimeEvent1, overtimeEvent2, seriouslyOvertimeEvent).collect(Collectors.toSet()));
 
         verifyNoMoreInteractions(recurringTaskService, reminderEventMapper, eventPublisher, cancellationEventMapper);
     }
@@ -101,8 +107,8 @@ public class PublishOvertimeRecurringTasksTest {
     @Test
     public void publishOvertimeRecurringTasksWhenThereThereAreNoExecutions() {
         //data set
-        Event seriouslyOvertimeEvent = new Event(DEPLOYMENT_NAME, "abc", LocalDateTime.now(), new HashMap<>());
-        Event cancellationEvent = new Event(DEPLOYMENT_NAME, "abc", LocalDateTime.now(), new HashMap<>());
+        Event seriouslyOvertimeEvent = new Event(DEPLOYMENT_NAME, "abc", FlowAction.UPDATE, LocalDateTime.now(), new HashMap<>());
+        Event cancellationEvent = new Event(DEPLOYMENT_NAME, "abc", FlowAction.END, LocalDateTime.now(), new HashMap<>());
         RecurringTaskDto recurringTask1 = new RecurringTaskDto(1L, "1", 1, 2, null);
         RecurringTaskDto recurringTask2 = new RecurringTaskDto(2L, "2", 2, 3, null);
         RecurringTaskDto recurringTask3 = new RecurringTaskDto(3L, "3", 3, 4, LocalDate.now().minusDays(1));

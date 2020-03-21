@@ -1,6 +1,7 @@
 package be.stijnhooft.portal.recurringtasks.mappers.event;
 
 import be.stijnhooft.portal.model.domain.Event;
+import be.stijnhooft.portal.model.domain.FlowAction;
 import be.stijnhooft.portal.recurringtasks.dtos.RecurringTaskDto;
 import be.stijnhooft.portal.recurringtasks.mappers.Mapper;
 import lombok.NonNull;
@@ -24,14 +25,21 @@ public class ReminderEventMapper extends Mapper<RecurringTaskDto, Event> {
     @Override
     public Event map(@NonNull RecurringTaskDto recurringTask) {
         LocalDate lastExecution = recurringTask.getLastExecution();
-        LocalDate lastAcceptableDayOfExecution = LocalDate.now().minusDays(recurringTask.getMaxNumberOfDaysBetweenExecutions());
+        LocalDate lastAcceptableDayOfExecution = lastExecution.plusDays(recurringTask.getMaxNumberOfDaysBetweenExecutions());
+        var isLastAcceptableDateOfExecution = LocalDate.now().isEqual(lastAcceptableDayOfExecution);
 
         Map<String, String> data = new HashMap<>();
         data.put("type", "reminder");
-        data.put("urgent", Boolean.toString(lastExecution.isEqual(lastAcceptableDayOfExecution)));
+        data.put("urgent", Boolean.toString(isLastAcceptableDateOfExecution));
         data.put("task", recurringTask.getName());
         data.put("lastExecution", recurringTask.getLastExecution().toString());
+        data.put("minDueDate", lastExecution.plusDays(recurringTask.getMinNumberOfDaysBetweenExecutions()).toString());
+        data.put("maxDueDate", lastAcceptableDayOfExecution.toString());
 
-        return new Event(deploymentName, deploymentName + "-" + recurringTask.getId(), LocalDateTime.now(), data);
+        return new Event(deploymentName,
+                deploymentName + "-" + recurringTask.getId(),
+                FlowAction.START,
+                LocalDateTime.now(),
+                data);
     }
 }
