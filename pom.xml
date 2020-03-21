@@ -199,10 +199,8 @@
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-stream</artifactId>
-            <type>test-jar</type>
+            <artifactId>spring-cloud-stream-test-support</artifactId>
             <scope>test</scope>
-            <classifier>test-binder</classifier>
         </dependency>
 
         <!-- support for Java 8 datetime types -->
