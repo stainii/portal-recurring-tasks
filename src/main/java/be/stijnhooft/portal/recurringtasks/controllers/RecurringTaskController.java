@@ -29,11 +29,9 @@ public class RecurringTaskController {
     @RequestMapping("/{id}")
     public ResponseEntity<RecurringTaskDto> findById(@PathVariable("id") Long id) {
         Optional<RecurringTaskDto> recurringTask = recurringTaskService.findById(id);
-        if (recurringTask.isPresent()) {
-            return ResponseEntity.ok(recurringTask.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return recurringTask
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)

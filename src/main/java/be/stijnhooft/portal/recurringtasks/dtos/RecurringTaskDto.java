@@ -1,14 +1,12 @@
 package be.stijnhooft.portal.recurringtasks.dtos;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @ToString
 @EqualsAndHashCode
+@Builder
 public class RecurringTaskDto {
 
     @Getter
