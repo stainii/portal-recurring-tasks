@@ -42,6 +42,7 @@ When running with Docker, this is done by providing the required Docker environm
 | RABBITMQ_USERNAME | my-username | Username to log in to RabbitMQ | required
 | RABBITMQ_PASSWORD | secret | Password to log in to RabbitMQ | required
 | EUREKA_SERVICE_URL | http://portal-eureka:8761/eureka | Url of Eureka | required
+| PUBLISH_OVERTIME_RECURRING_TASKS_CRON | 0 0 4 * * * | Cron in Spring format which indicates when overdue tasks should be published. **Should be done once every day.** | required
 | JAVA_OPTS_RECURRING_TASKS | -Xmx400m -Xms400m | Java opts you want to pass to the JVM | optional
 
 

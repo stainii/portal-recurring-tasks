@@ -8,6 +8,7 @@ import be.stijnhooft.portal.recurringtasks.messaging.EventPublisher;
 import be.stijnhooft.portal.recurringtasks.services.RecurringTaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -32,14 +33,16 @@ public class PublishOvertimeRecurringTasks {
     public PublishOvertimeRecurringTasks(RecurringTaskService recurringTaskService,
                                          ReminderEventMapper reminderEventMapper,
                                          CancellationEventMapper cancellationEventMapper,
-                                         EventPublisher eventPublisher) {
+                                         EventPublisher eventPublisher,
+                                         @Value("${recurring-tasks.publish-overtime-recurring-tasks.cron}") String cron) {
         this.recurringTaskService = recurringTaskService;
         this.reminderEventMapper = reminderEventMapper;
         this.eventPublisher = eventPublisher;
         this.cancellationEventMapper = cancellationEventMapper;
+        log.info("I will publish overtime recurring tasks following this cron: {}", cron);
     }
 
-    @Scheduled(cron = "0 0 16 * * *")
+    @Scheduled(cron = "${recurring-tasks.publish-overtime-recurring-tasks.cron}")
     public void publishOvertimeRecurringTasks() {
         log.info("Checking if overtime recurring tasks need to be published");
 
